@@ -1,14 +1,17 @@
-
 import 'package:flutter/material.dart';
-import 'package:proj_flutter_tcc/components/editor.dart';
+import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/login_constants.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 
 class LoginScreen extends StatefulWidget {
+  LoginUpdateWidgetState state;
+
   @override
   State<StatefulWidget> createState() {
-    return LoginUpdateWidgetState();
+    var state = LoginUpdateWidgetState();
+    this.state = state;
+    return state;
   }
 }
 
@@ -20,42 +23,44 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-          children: [
-            PaddingWidgetPattern(32.0),
-            Container(
-              child: Image.asset(
-                logoPath,
-                height: 120,
-                width: 120,
-                fit: BoxFit.contain,
-              ),
-            ),
-            PaddingWidgetPattern(8.0),
-            Editor(
-              nameLabel: usernameLabelText,
-              controller: _loginUser,
-              icon: Icons.account_circle_sharp,
-              iconColor: Colors.indigo,
-            ),
-            Editor(
-              nameLabel: passwordLabelText,
-              controller: _loginPassword,
-              standardPassword: true,
-              wordSugestion: false,
-              autocorrect: false,
-            ),
-            PaddingWidgetPattern(8.0),
-            ElevatedButton(
-              child: Text(loginButtonText),
-              onPressed: _loginButtonVerify ? () => signInUser(context) : null,
-            ),
-            Text(orTyped),
-            ElevatedButton(
-              child: Text(registerButtonText),
-              onPressed: null,
-            ),
-          ],
-        ));
+      children: [
+        PaddingWidgetPattern(32.0),
+        Container(
+          child: Image.asset(
+            logoPath,
+            height: 120,
+            width: 120,
+            fit: BoxFit.contain,
+          ),
+        ),
+        PaddingWidgetPattern(8.0),
+        TextBox(
+          nameLabel: usernameLabelText,
+          controller: _loginUser,
+          icon: Icons.account_circle_sharp,
+          iconColor: Colors.indigo,
+          onChange: enableButton,
+        ),
+        TextBox(
+          nameLabel: passwordLabelText,
+          controller: _loginPassword,
+          obscureText: true,
+          wordSugestion: false,
+          autocorrect: false,
+          onChange: enableButton,
+        ),
+        PaddingWidgetPattern(8.0),
+        ElevatedButton(
+          child: Text(loginButtonText),
+          onPressed: _loginButtonVerify ? () => signInUser(context) : null,
+        ),
+        Text(orTyped),
+        ElevatedButton(
+          child: Text(registerButtonText),
+          onPressed: () => {},
+        ),
+      ],
+    ));
   }
 
   void signInUser(BuildContext context) {
@@ -72,13 +77,12 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
     } else {}
   }
 
-  void enableButton() {
+  void enableButton(String _) {
     if (_loginUser.text.isNotEmpty && _loginPassword.text.isNotEmpty) {
       setState(() {
         _loginButtonVerify = true;
       });
-    }
-    else {
+    } else {
       setState(() {
         _loginButtonVerify = false;
       });
