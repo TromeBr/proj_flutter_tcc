@@ -12,6 +12,7 @@ class TextBox extends StatefulWidget {
   final TextInputType keyboardType;
   final Function onChange;
 
+
   TextBox({
     this.nameLabel,
     this.hintLabel,
@@ -22,11 +23,11 @@ class TextBox extends StatefulWidget {
     this.wordSugestion = true,
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
-    this.onChange
+    this.onChange,
   });
 
   @override
-  State < StatefulWidget > createState() {
+  State<StatefulWidget> createState() {
     return TextBoxState(
       nameLabel: this.nameLabel,
       hintLabel: this.hintLabel,
@@ -37,11 +38,12 @@ class TextBox extends StatefulWidget {
       wordSugestion: this.wordSugestion,
       autocorrect: this.autocorrect,
       keyboardType: this.keyboardType,
-      onChange: this.onChange);
+      onChange: this.onChange,
+    );
   }
 }
 
-class TextBoxState extends State < TextBox > {
+class TextBoxState extends State<TextBox> {
   final String nameLabel;
   final String hintLabel;
   final TextEditingController controller;
@@ -52,6 +54,7 @@ class TextBoxState extends State < TextBox > {
   final bool autocorrect;
   final TextInputType keyboardType;
   final Function onChange;
+  bool _isHidden = true;
 
   TextBoxState({
     this.nameLabel,
@@ -63,26 +66,39 @@ class TextBoxState extends State < TextBox > {
     this.wordSugestion = true,
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
-    this.onChange
+    this.onChange,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          style: TextStyle(fontSize: 24.0),
-          decoration: InputDecoration(
-            labelText: nameLabel,
-            hintText: hintLabel,
-            icon: icon != null ? Icon(icon, color: iconColor) : null),
-          obscureText: obscureText,
-          enableSuggestions: wordSugestion,
-          autocorrect: autocorrect,
-          keyboardType: keyboardType,
-          onChanged: onChange,
+      child: TextField(
+        controller: controller,
+        style: TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+          labelText: nameLabel,
+          hintText: hintLabel,
+          icon: icon != null ? Icon(icon, color: iconColor) : null,
+          suffix: obscureText
+              ? InkWell(
+                  onTap: _togglePasswordView,
+                  child:
+                      Icon(_isHidden ? Icons.visibility : Icons.visibility_off))
+              : null,
         ),
+        obscureText: _isHidden,
+        enableSuggestions: wordSugestion,
+        autocorrect: autocorrect,
+        keyboardType: keyboardType,
+        onChanged: onChange,
+      ),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 }
