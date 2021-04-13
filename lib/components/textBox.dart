@@ -87,7 +87,7 @@ class TextBoxState extends State<TextBox> {
                       Icon(_isHidden ? Icons.visibility : Icons.visibility_off))
               : null,
         ),
-        obscureText: _isHidden,
+        obscureText: !_isHidden,
         enableSuggestions: wordSugestion,
         autocorrect: autocorrect,
         keyboardType: keyboardType,
