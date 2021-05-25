@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/login_constants.dart';
-import 'package:proj_flutter_tcc/components/textBox.dart';
 
-class UserRegistrationScreen extends StatefulWidget {
+class ExamRegisterScreen extends StatefulWidget {
+  ExamRegisterForm state;
+
   @override
   State<StatefulWidget> createState() {
-    return UserRegistrationWidgetState();
+    var state = ExamRegisterForm();
+    this.state = state;
+    return state;
   }
 }
 
-class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
+class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerUser = TextEditingController();
   final TextEditingController _registerPassword = TextEditingController();
   final TextEditingController _registerPasswordAgain = TextEditingController();

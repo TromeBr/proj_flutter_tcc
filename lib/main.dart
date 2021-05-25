@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'screens/login/login.dart';
+import 'screens/exams/consult.dart';
+import 'screens/exams/register.dart';
 
 void main() => runApp(TCCApp());
 
@@ -8,7 +9,7 @@ class TCCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: MedExamConsultScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Colors.blueAccent,

@@ -36,14 +36,14 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             ),
           ),
           PaddingWidgetPattern(8.0),
-          TextBox(
+          TextBoxStandard(
             nameLabel: usernameLabelText,
             controller: _loginUser,
             icon: Icons.account_circle_sharp,
             iconColor: Colors.indigo,
             onChange: enableButton,
           ),
-          TextBox(
+          TextBoxStandard(
             nameLabel: passwordLabelText,
             controller: _loginPassword,
             obscureText: true,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextBox extends StatefulWidget {
+class TextBoxStandard extends StatefulWidget {
   final String nameLabel;
   final String hintLabel;
   final TextEditingController controller;
@@ -13,7 +13,7 @@ class TextBox extends StatefulWidget {
   final Function onChange;
 
 
-  TextBox({
+  TextBoxStandard({
     this.nameLabel,
     this.hintLabel,
     this.controller,
@@ -43,7 +43,7 @@ class TextBox extends StatefulWidget {
   }
 }
 
-class TextBoxState extends State<TextBox> {
+class TextBoxState extends State<TextBoxStandard> {
   final String nameLabel;
   final String hintLabel;
   final TextEditingController controller;
