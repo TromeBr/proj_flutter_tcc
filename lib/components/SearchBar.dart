@@ -17,44 +17,29 @@ class SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        PaddingWidgetPattern(5.0),
-        TextField(
-          cursorColor: Colors.deepPurple,
+        PaddingWidgetPattern(10.0),
+        TextFormField(
           controller: _searchText,
           style: TextStyle(fontSize: 24.0),
+          textInputAction: TextInputAction.search,
+          onFieldSubmitted: (_searchText){
+            print(_searchText);
+          },
           decoration: InputDecoration(
               labelText: 'Busca',
-              labelStyle: TextStyle(color: Colors.deepPurple),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.deepPurple)),
-              icon: Icon(Icons.search, color: Colors.deepPurple),
+              icon: Icon(Icons.search),
               suffix: InkWell(
-                  onTap: _togglePasswordView,
+                  onTap: _toggleFilter,
                   child:
                       Icon(Icons.filter_alt_sharp, color: Colors.deepPurple))),
-        ),
-        PaddingWidgetPattern(5.0),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: OutlinedButton(
-              onPressed: () {
-                print('Busca efetuada');
-              },
-              child: Text(
-                'Buscar',
-                style: TextStyle(color: Colors.deepPurple),
-              ),
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-                side: BorderSide(width: 2, color: Colors.deepPurple),
-              )),
         ),
       ],
     );
   }
 
-  void _togglePasswordView() {
+  void _toggleFilter() {
     setState(() {});
   }
 }

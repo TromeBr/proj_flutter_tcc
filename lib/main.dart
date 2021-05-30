@@ -12,13 +12,19 @@ class TCCApp extends StatelessWidget {
       home: MedExamConsultScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.blueAccent,
-        accentColor: Colors.blueAccent,
+        primaryColor: Colors.deepPurple,
+        accentColor: Colors.deepPurple,
+        scrollbarTheme: ScrollbarThemeData().copyWith(
+          thumbColor: MaterialStateProperty.all(Colors.grey[500]),
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.blueAccent,
-        accentColor: Colors.blueAccent,
+        primaryColor: Colors.white,
+        accentColor: Colors.white,
+        scrollbarTheme: ScrollbarThemeData().copyWith(
+          thumbColor: MaterialStateProperty.all(Colors.white),
+        ),
       ),
     );
   }

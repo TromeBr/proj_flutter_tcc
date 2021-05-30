@@ -15,49 +15,120 @@ class ExamRegisterScreen extends StatefulWidget {
 }
 
 class ExamRegisterForm extends State<ExamRegisterScreen> {
-  final TextEditingController _registerUser = TextEditingController();
-  final TextEditingController _registerPassword = TextEditingController();
-  final TextEditingController _registerPasswordAgain = TextEditingController();
-  final TextEditingController _registerEmail = TextEditingController();
-  final TextEditingController _registerCPF = TextEditingController();
+  final TextEditingController _registerCampo1 = TextEditingController();
+  final TextEditingController _registerCampo2 = TextEditingController();
+  final TextEditingController _registerCampo3 = TextEditingController();
+  final TextEditingController _registerData = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(registrationTitleScreen),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
+        centerTitle: true,
+        title: const Text(
+          'Cadastro de Exames',
+          style: TextStyle(color: Colors.deepPurple),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            PaddingWidgetPattern(8.0),
+            PaddingWidgetPattern(4.0),
             TextBoxStandard(
-              nameLabel: usernameLabelText,
-              controller: _registerUser,
+              nameLabel: 'Campo 1',
+              controller: _registerCampo1,
             ),
             TextBoxStandard(
-              nameLabel: emailLabelText,
-              controller: _registerEmail,
+              nameLabel: 'Campo 2',
+              controller: _registerCampo2,
             ),
             TextBoxStandard(
-              nameLabel: CPFLabelText,
-              controller: _registerCPF,
+              nameLabel: 'Campo 3',
+              controller: _registerCampo1,
             ),
             TextBoxStandard(
-              nameLabel: passwordLabelText,
-              controller: _registerPassword,
-              obscureText: true,
+              nameLabel: 'Data',
+              controller: _registerData,
+              keyboardType: TextInputType.datetime,
             ),
-            TextBoxStandard(
-              nameLabel: passwordAgainLabelText,
-              controller: _registerPasswordAgain,
-              obscureText: true,
+            PaddingWidgetPattern(20.0),
+           Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 83, 0),
+                  ),
+                  Container(
+                    width: 100.0,
+                    height: 50.0,
+                    child: OutlinedButton(
+                      child: Icon(
+                        Icons.attach_file_sharp,
+                        color: Colors.white,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        side: BorderSide(
+                          width: 2,
+                          color: Colors.black26,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  ),
+                  Container(
+                    width: 100.0,
+                    height: 50.0,
+                    child: OutlinedButton(
+                      child: Icon(
+                        Icons.photo_camera_sharp,
+                        color: Colors.white,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        side: BorderSide(
+                          width: 2,
+                          color: Colors.black26,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+
+
+            PaddingWidgetPattern(30.0),
+            Container(
+              width: 200.0,
+              height: 50.0,
+              child: OutlinedButton(
+                child: Text('Cadastrar', style: TextStyle(color: Colors.white)),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  side: BorderSide(
+                    width: 2,
+                    color: Colors.black26,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                onPressed: () {},
+              ),
             ),
-            PaddingWidgetPattern(8.0),
-            ElevatedButton(
-              child: Text(recordUserButtonText),
-              onPressed: () {},
-            )
           ],
         ),
       ),

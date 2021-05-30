@@ -26,16 +26,26 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pessoaTeste = new Person('Gabriel', 18, '55464654', DateTime.now(), 'Pinda', 'SP', 'Brasil');
+    final pessoaTeste = new Person(
+        'Gabriel', 18, '55464654', DateTime.now(), 'Pinda', 'SP', 'Brasil');
     final pacienteTeste = new Patient(pessoaTeste);
-    final exameTeste = new MedExam(pacienteTeste, 'Exame Teste', DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    final exameTeste = new MedExam(
+        pacienteTeste,
+        'Sangue',
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    final exameTeste2 = new MedExam(
+        pacienteTeste,
+        'Próstata',
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
     widget._medExamList.clear();
     widget._medExamList.add(exameTeste);
+    widget._medExamList.add(exameTeste2);
     widget._medExamList.add(exameTeste);
+    widget._medExamList.add(exameTeste2);
     widget._medExamList.add(exameTeste);
-    widget._medExamList.add(exameTeste);
-    widget._medExamList.add(exameTeste);
-    widget._medExamList.add(exameTeste);
+    widget._medExamList.add(exameTeste2);
     widget._medExamList.add(exameTeste);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -95,18 +105,18 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                   child: Container(
                     width: width,
                     margin: margin,
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(5.0), bottom:Radius.circular(5.0) ),
-                        border: Border.all(width: 3, color: Colors.deepPurple)),
-                    child: Container(
+                    child: Scrollbar(
+                      isAlwaysShown: true,
                         child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           itemCount: widget._medExamList.length,
                           itemBuilder: (context, indice) {
                             final exam = widget._medExamList[indice];
                             return ExamItem(exam);
                           },
-                        )),
+                        ),
+                      ),
+
                   ),
                 ),
               ],
@@ -134,10 +144,18 @@ class ExamItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(Icons.assessment_sharp),
-        title: Text(_exam.medExamType.toString()),
-        subtitle: Text(_exam.medExamDate.toString()),
+        leading: Icon(
+          _exam.medExamType == 'Sangue'
+              ? Icons.accessibility_new_sharp
+              : Icons.assignment_turned_in_sharp,
+          color: Colors.white,
+        ),
+        title: Text(_exam.medExamType.toString(),
+            style: TextStyle(color: Colors.white)),
+        subtitle: Text(_exam.medExamDate.toString(),
+            style: TextStyle(color: Colors.white)),
       ),
+      color: Colors.deepPurple,
     );
   }
 }
