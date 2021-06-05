@@ -51,32 +51,22 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.deepPurple),
-          centerTitle: true,
-          title: const Text(
-            'Consulta de Exames',
-            style: TextStyle(color: Colors.deepPurple),
+        appBar: AppBarPattern(titleScreen: 'Cadastro de Exames', actions:  <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              final Future<MedExam> future = Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ExamRegisterScreen();
+                  },
+                ),
+              );
+              future.then((examItem) => _examsUpdate(examItem));
+            },
           ),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                final Future<MedExam> future = Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ExamRegisterScreen();
-                    },
-                  ),
-                );
-                future.then((examItem) => _examsUpdate(examItem));
-              },
-            ),
-          ],
-        ),
+        ],),
         body: Scaffold(
           resizeToAvoidBottomInset: false,
           body: SafeArea(

@@ -14,3 +14,27 @@ class PaddingWidgetPattern extends StatelessWidget {
   PaddingWidgetPattern(this._paddingValue);
 }
 
+class AppBarPattern extends StatelessWidget implements PreferredSizeWidget {
+  final String titleScreen;
+  final List<Widget> actions;
+  const AppBarPattern({Key key, this.titleScreen, this.actions}) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      iconTheme: IconThemeData(color: Colors.deepPurple),
+      centerTitle: true,
+      title: Text(
+        titleScreen,
+        style: TextStyle(color: Colors.deepPurple),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      actions: actions,
+    );
+  }
+
+}
