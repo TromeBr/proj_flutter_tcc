@@ -51,14 +51,49 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             autocorrect: false,
             onChange: enableButton,
           ),
-          PaddingWidgetPattern(8.0),
-          ElevatedButton(
-            child: Text(loginButtonText),
-            onPressed: _loginButtonVerify ? () => signInUser(context) : null,
+          PaddingWidgetPattern(15.0),
+      Container(
+        width: 300.0,
+        height: 50.0,
+        child: OutlinedButton(
+          child: Text(
+            loginButtonText,
+            style: TextStyle(color: Colors.white),
           ),
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.deepPurple,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            side: BorderSide(
+              width: 2,
+              color: Colors.black26,
+              style: BorderStyle.solid,
+            ),
+          ),
+          onPressed: _loginButtonVerify ? () => signInUser(context) : null,
+        ),
+      ),
+          PaddingWidgetPattern(8.0),
           Text(orTyped),
-          ElevatedButton(
-            child: Text(userRegistrationButtonText),
+          PaddingWidgetPattern(8.0),
+      Container(
+        width: 300.0,
+        height: 50.0,
+        child: OutlinedButton(
+            child: Text(
+              userRegistrationButtonText,
+              style: TextStyle(color: Colors.white),
+            ),
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              side: BorderSide(
+                width: 2,
+                color: Colors.black26,
+                style: BorderStyle.solid,
+              ),
+            ),
             onPressed: () {
               final Future<UserLogin> future = Navigator.push(
                 context,
@@ -69,8 +104,9 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                 ),
               );
               future.then((UserLogin) {});
-            },
-          )
+            }),
+      ),
+
         ],
       ),
     );

@@ -20,9 +20,7 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(registrationTitleScreen),
-      ),
+      appBar: AppBarPattern(titleScreen: registrationTitleScreen,),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -49,11 +47,28 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
               controller: _registerPasswordAgain,
               obscureText: true,
             ),
-            PaddingWidgetPattern(8.0),
-            ElevatedButton(
-              child: Text(recordUserButtonText),
-              onPressed: () {},
-            )
+            PaddingWidgetPattern(30.0),
+            Container(
+              height: 50.0,
+              width: 300.0,
+              child: OutlinedButton(
+                child: Text(
+                  recordUserButtonText,
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  side: BorderSide(
+                    width: 2,
+                    color: Colors.black26,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                onPressed: () {},
+              ),
+            ),
           ],
         ),
       ),
