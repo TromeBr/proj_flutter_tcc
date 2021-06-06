@@ -12,8 +12,8 @@ class HamburguerMenu extends StatelessWidget {
               color: Colors.deepPurple,
             ),
             arrowColor: Colors.white,
-            accountName: Text('Gabriel'),
-            accountEmail: Text('Trome Br'),
+            accountName: Text('User Test'),
+            accountEmail: Text('usertest@test.com'),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(

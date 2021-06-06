@@ -36,22 +36,37 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
     final exameTeste2 = new MedExam(
         pacienteTeste,
-        'Próstata',
+        'Urina',
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    final exameTeste3 = new MedExam(
+        pacienteTeste,
+        'COVID-19',
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    final exameTeste4 = new MedExam(
+        pacienteTeste,
+        'Pézinho',
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    final exameTeste5 = new MedExam(
+        pacienteTeste,
+        'Tomografia',
         DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
     widget._medExamList.clear();
     widget._medExamList.add(exameTeste);
     widget._medExamList.add(exameTeste2);
-    widget._medExamList.add(exameTeste);
-    widget._medExamList.add(exameTeste2);
-    widget._medExamList.add(exameTeste);
+    widget._medExamList.add(exameTeste3);
+    widget._medExamList.add(exameTeste4);
+    widget._medExamList.add(exameTeste5);
     widget._medExamList.add(exameTeste2);
     widget._medExamList.add(exameTeste);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        appBar: AppBarPattern(titleScreen: 'Cadastro de Exames', actions:  <Widget>[
+        appBar: AppBarPattern(titleScreen: 'Consulta de Exames', actions:  <Widget>[
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
@@ -135,7 +150,7 @@ class ExamItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Icon(
-          _exam.medExamType == 'Sangue'
+          _exam.medExamType == 'Sangue' || _exam.medExamType == 'Pézinho'
               ? Icons.accessibility_new_sharp
               : Icons.assignment_turned_in_sharp,
           color: Colors.white,
