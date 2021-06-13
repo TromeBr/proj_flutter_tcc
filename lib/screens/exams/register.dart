@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
@@ -24,13 +20,36 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerCampo2 = TextEditingController();
   final TextEditingController _registerCampo3 = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
+
+  //ImagePicker
   PickedFile _image;
 
-  Future _getImage(ImageSource source) async{
-    var image = await ImagePicker.platform.pickImage(source: source);
-    setState(() {
-      _image = image;
-    });
+  //FilePicker
+  String _fileName;
+  List<PlatformFile> _paths;
+  String _dirPath;
+  String _extension;
+  bool _loadingPath = false;
+  FileType _pickingType = FileType.custom;
+
+ void initState() {
+   if(_paths != null)
+     _clearCache();
+   _image = null;
+ }
+ Future _getImage(ImageSource source) async{
+   try{
+     var image = await ImagePicker.platform.pickImage(source: source);
+     setState(() {
+       _image = image;
+     });
+   }
+   on PlatformException catch (e) {
+     print("Operação não suportada: " + e.toString());
+   }
+   catch (ex) {
+     print(ex);
+   }
   }
   @override
   Widget build(BuildContext context) {
@@ -82,7 +101,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                           style: BorderStyle.solid,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => _openFile(),
                     ),
                   ),
                   Padding(
@@ -168,8 +187,33 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
           );
         }
     );
-
-
-
   }
+
+  void _openFile() async {
+    setState(() => _loadingPath = true);
+    try {
+      _dirPath = null;
+      _paths = (await FilePicker.platform.pickFiles(
+        type: _pickingType,
+        allowedExtensions: ['pdf', 'jpeg', 'jpg']
+      ))?.files;
+    }
+    on PlatformException catch (e) {
+      print("Operação não suportada: " + e.toString());
+    } catch (ex) {
+      print(ex);
+    }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+      print(_paths.first.extension);
+      _fileName =
+      _paths != null ? _paths.map((e) => e.name).toString() : '...';
+    });
+  }
+
+  void _clearCache() {
+    FilePicker.platform.clearTemporaryFiles();
+  }
+
 }

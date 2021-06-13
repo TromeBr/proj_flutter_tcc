@@ -28,7 +28,6 @@ class HamburguerMenu extends StatelessWidget {
                   SizedBox(height: 0.0),
                   GestureDetector(
                     onTap: () {
-                      print('Foi');
                     },
                     child: CircleAvatar(
                       child: Icon(
