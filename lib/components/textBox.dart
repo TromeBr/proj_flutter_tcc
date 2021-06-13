@@ -7,7 +7,7 @@ class TextBoxStandard extends StatefulWidget {
   final IconData icon;
   final Color iconColor;
   final bool obscureText;
-  final bool wordSugestion;
+  final bool wordSuggestion;
   final bool autocorrect;
   final TextInputType keyboardType;
   final Function onChange;
@@ -20,7 +20,7 @@ class TextBoxStandard extends StatefulWidget {
     this.icon,
     this.iconColor,
     this.obscureText = false,
-    this.wordSugestion = true,
+    this.wordSuggestion = true,
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
     this.onChange,
@@ -35,7 +35,7 @@ class TextBoxStandard extends StatefulWidget {
       icon: this.icon,
       iconColor: this.iconColor,
       obscureText: this.obscureText,
-      wordSugestion: this.wordSugestion,
+      wordSuggestion: this.wordSuggestion,
       autocorrect: this.autocorrect,
       keyboardType: this.keyboardType,
       onChange: this.onChange,
@@ -50,11 +50,11 @@ class TextBoxState extends State<TextBoxStandard> {
   final IconData icon;
   final Color iconColor;
   final bool obscureText;
-  final bool wordSugestion;
+  final bool wordSuggestion;
   final bool autocorrect;
   final TextInputType keyboardType;
   final Function onChange;
-  bool _isHidden = true;
+  bool _isHidden;
 
   TextBoxState({
     this.nameLabel,
@@ -63,12 +63,14 @@ class TextBoxState extends State<TextBoxStandard> {
     this.icon,
     this.iconColor,
     this.obscureText = false,
-    this.wordSugestion = true,
+    this.wordSuggestion = true,
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
     this.onChange,
   });
-
+  initState(){
+    _isHidden = true;
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -87,8 +89,8 @@ class TextBoxState extends State<TextBoxStandard> {
                       Icon(_isHidden ? Icons.visibility : Icons.visibility_off))
               : null,
         ),
-        obscureText: !_isHidden,
-        enableSuggestions: wordSugestion,
+        obscureText: _isHidden,
+        enableSuggestions: wordSuggestion,
         autocorrect: autocorrect,
         keyboardType: keyboardType,
         onChanged: onChange,
@@ -97,6 +99,7 @@ class TextBoxState extends State<TextBoxStandard> {
   }
 
   void _togglePasswordView() {
+
     setState(() {
       _isHidden = !_isHidden;
     });

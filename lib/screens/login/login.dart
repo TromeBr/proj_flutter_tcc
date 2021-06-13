@@ -47,7 +47,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             nameLabel: passwordLabelText,
             controller: _loginPassword,
             obscureText: true,
-            wordSugestion: false,
+            wordSuggestion: false,
             autocorrect: false,
             onChange: enableButton,
           ),
@@ -61,7 +61,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             style: TextStyle(color: Colors.white),
           ),
           style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: _loginButtonVerify ? Colors.deepPurple : Colors.grey,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             side: BorderSide(
