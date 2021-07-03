@@ -5,6 +5,7 @@ import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/patient.dart';
 import 'package:proj_flutter_tcc/models/person.dart';
+import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
 
 import 'register.dart';
 
@@ -21,44 +22,13 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
   final backColor = Colors.deepPurple;
+  Future<List<MedExam>> exams = examService.getExamesByCpf('50009379029');
 
   @override
   Widget build(BuildContext context) {
     final pessoaTeste = new Person(
-        'Gabriel', 18, '55464654', DateTime.now(), 'Pinda', 'SP', 'Brasil');
+        'Gabriel', 18, '50009379029', DateTime.now(), 'Pinda', 'SP', 'Brasil');
     final pacienteTeste = new Patient(pessoaTeste);
-    final exameTeste = new MedExam(
-      pacienteTeste,
-      'Sangue',
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-    );
-    final exameTeste2 = new MedExam(
-      pacienteTeste,
-      'Urina',
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-    );
-    final exameTeste3 = new MedExam(
-      pacienteTeste,
-      'COVID-19',
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-    );
-    final exameTeste4 = new MedExam(
-      pacienteTeste,
-      'Pézinho',
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-    );
-    final exameTeste5 = new MedExam(
-      pacienteTeste,
-      'Tomografia',
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-    );
-    widget._medExamList.clear();
-    widget._medExamList.add(exameTeste);
-    widget._medExamList.add(exameTeste2);
-    widget._medExamList.add(exameTeste3);
-    widget._medExamList.add(exameTeste4);
-    widget._medExamList.add(exameTeste5);
-    widget._medExamList.add(exameTeste5);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -110,17 +80,24 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                   child: Container(
                     width: width,
                     margin: margin,
-                    child: Scrollbar(
-                      isAlwaysShown: true,
-                      child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: widget._medExamList.length,
-                        itemBuilder: (context, indice) {
-                          final exam = widget._medExamList[indice];
-                          return ExamItem(exam);
-                        },
-                      ),
-                    ),
+                    child: FutureBuilder<List<MedExam>>(
+                        future: exams,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<MedExam>> snapshot) {
+                              if (snapshot.data != null)
+                              widget._medExamList.addAll(snapshot.data);
+                              return Scrollbar(
+                                isAlwaysShown: true,
+                                child: ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: widget._medExamList.length,
+                                  itemBuilder: (context, indice) {
+                                    final exam = widget._medExamList[indice];
+                                    return ExamItem(exam);
+                                  },
+                            ),
+                          );
+                        }),
                   ),
                 ),
               ],
