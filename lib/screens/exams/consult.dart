@@ -128,14 +128,14 @@ class ExamItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Icon(
-          _exam.medExamType == 'Sangue' || _exam.medExamType == 'Pézinho'
+          _exam.exam == 'Sangue' || _exam.exam == 'Pézinho'
               ? Icons.accessibility_new_sharp
               : Icons.assignment_turned_in_sharp,
           color: Colors.white,
         ),
-        title: Text(_exam.medExamType.toString(),
+        title: Text(_exam.exam.toString(),
             style: TextStyle(color: Colors.white)),
-        subtitle: Text(_exam.medExamDate.toString(),
+        subtitle: Text(_exam.date.toString(),
             style: TextStyle(color: Colors.white)),
       ),
       color: Colors.deepPurple,
