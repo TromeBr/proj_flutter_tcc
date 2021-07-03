@@ -69,7 +69,7 @@ class TextBoxState extends State<TextBoxStandard> {
     this.onChange,
   });
   initState(){
-    _isHidden = true;
+      _isHidden = obscureText;
   }
   @override
   Widget build(BuildContext context) {

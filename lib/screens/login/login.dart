@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/login_constants.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
+import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/screens/login/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,12 +25,13 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: SingleChildScrollView(
+        child:Column(
         children: [
           PaddingWidgetPattern(32.0),
           Container(
             child: Image.asset(
-              logoPath,
+              LOGOPATH,
               height: 120,
               width: 120,
               fit: BoxFit.contain,
@@ -40,7 +42,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             nameLabel: usernameLabelText,
             controller: _loginUser,
             icon: Icons.account_circle_sharp,
-            iconColor: Colors.indigo,
+            iconColor: Color(systemPrimaryColor),
             onChange: enableButton,
           ),
           TextBoxStandard(
@@ -61,7 +63,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             style: TextStyle(color: Colors.white),
           ),
           style: OutlinedButton.styleFrom(
-            backgroundColor: _loginButtonVerify ? Colors.deepPurple : Colors.grey,
+            backgroundColor: _loginButtonVerify ? Color(systemPrimaryColor) : Colors.grey,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             side: BorderSide(
@@ -70,7 +72,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               style: BorderStyle.solid,
             ),
           ),
-          onPressed: _loginButtonVerify ? () => signInUser(context) : null,
+          //onPressed: _loginButtonVerify ? () => signInUser(context) : null, // DEBUG do usuário digitado
+          onPressed: _loginButtonVerify ? () => goToMedConsultScreenTest(context) : null,
         ),
       ),
           PaddingWidgetPattern(8.0),
@@ -85,7 +88,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               style: TextStyle(color: Colors.white),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Color(systemPrimaryColor),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               side: BorderSide(
@@ -108,10 +111,19 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       ),
 
         ],
-      ),
+      ),),
     );
   }
-
+ void goToMedConsultScreenTest(BuildContext context){
+   final Future<UserLogin> future = Navigator.push(
+     context,
+     MaterialPageRoute(
+       builder: (context) {
+         return MedExamConsultScreen();
+       },
+     ),
+   );
+ }
   void signInUser(BuildContext context) {
     final String _user = _loginUser.text;
     final String _password = _loginPassword.text;
