@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/screens/login/login.dart';
 
 class HamburguerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Scrollbar(
+        isAlwaysShown: false,
+        child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: Color(systemPrimaryColor),
             ),
             arrowColor: Colors.white,
             accountName: Text('User Test'),
@@ -18,7 +22,7 @@ class HamburguerMenu extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.person,
-                color: Colors.deepPurple,
+                color: Color(systemPrimaryColor),
               ),
             ),
             onDetailsPressed: () {},
@@ -48,15 +52,27 @@ class HamburguerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Item 2'),
-            onTap: () {
-              Navigator.pop(context);
+            title: Text('Sair'),
+            onTap: ()  {
+              //Navigator.pop(context);
+              logoff(context);
             },
           ),
         ],
-      ),
+      ),),
     );
   }
 
   HamburguerMenu();
+
+  void logoff(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return LoginScreen();
+        },
+      ),
+    );
+  }
 }

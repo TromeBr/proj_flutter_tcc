@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'models/consts.dart';
 import 'screens/exams/consult.dart';
 import 'screens/exams/register.dart';
 import 'screens/login/login.dart';
@@ -10,11 +11,11 @@ class TCCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MedExamConsultScreen(),
+      home: LoginScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.deepPurple,
-        accentColor: Colors.deepPurple,
+        primaryColor: Color(systemPrimaryColor),
+        accentColor: Color(systemSecundaryColor),
         scrollbarTheme: ScrollbarThemeData().copyWith(
           thumbColor: MaterialStateProperty.all(Colors.grey[500]),
         ),

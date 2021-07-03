@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/login_constants.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 
 class SearchBar extends StatefulWidget {
@@ -28,12 +28,12 @@ class SearchBarState extends State<SearchBar> {
           decoration: InputDecoration(
               labelText: 'Busca',
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.deepPurple)),
+                  borderSide: BorderSide(color: Color(systemPrimaryColor),)),
               icon: Icon(Icons.search),
               suffix: InkWell(
                   onTap: _toggleFilter,
                   child:
-                      Icon(Icons.filter_alt_sharp, color: Colors.deepPurple))),
+                      Icon(Icons.filter_alt_sharp, color: Color(systemPrimaryColor),))),
         ),
       ],
     );
