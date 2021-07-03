@@ -54,8 +54,8 @@ class HamburguerMenu extends StatelessWidget {
           ListTile(
             title: Text('Sair'),
             onTap: ()  {
-              Navigator.pop(context);
-              //logoff(context);
+              //Navigator.pop(context);
+              logoff(context);
             },
           ),
         ],
