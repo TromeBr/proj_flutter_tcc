@@ -1,18 +1,24 @@
 import 'package:proj_flutter_tcc/models/patient.dart';
 
 class MedExam {
-  final Patient medExamPatient;
-  final String medExamType;
-  final DateTime medExamDate;
+  //final Patient medExamPatient;
+  final String exam;
+  final String file;
+  final Object requestingPhysician;
+  final Object reportingPhysician;
+  final DateTime date;
 
   MedExam(
-      this.medExamPatient,
-      this.medExamType,
-      this.medExamDate,
-      );
+    //this.medExamPatient,
+    this.exam,
+    this.date,
+    this.file,
+    this.requestingPhysician,
+    this.reportingPhysician,
+  );
 
   @override
   String toString() {
-    return 'Exame{Paciente: $medExamPatient, Tipo de Exame: $medExamType, Data do Exame: $medExamDate}';
+    return 'Tipo de Exame: $exam, Data do Exame: $date}';
   }
 }

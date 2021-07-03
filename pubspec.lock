@@ -63,7 +63,6 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-
     version: "6.1.2"
   file_picker:
     dependency: "direct main"
@@ -95,7 +94,7 @@ packages:
     source: sdk
     version: "0.0.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
