@@ -82,19 +82,21 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                     margin: margin,
                     child: FutureBuilder<List<MedExam>>(
                         future: exams,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<MedExam>> snapshot) {
-                              if (snapshot.data != null)
-                              widget._medExamList.addAll(snapshot.data);
-                              return Scrollbar(
-                                isAlwaysShown: true,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: widget._medExamList.length,
-                                  itemBuilder: (context, indice) {
-                                    final exam = widget._medExamList[indice];
-                                    return ExamItem(exam);
-                                  },
+                        builder: (
+                          BuildContext context,
+                          AsyncSnapshot<List<MedExam>> snapshot
+                        ) {
+                          if (snapshot.data != null)
+                            widget._medExamList.addAll(snapshot.data);
+                          return Scrollbar(
+                            isAlwaysShown: true,
+                            child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              itemCount: widget._medExamList.length,
+                              itemBuilder: (context, indice) {
+                                final exam = widget._medExamList[indice];
+                                return ExamItem(exam);
+                              },
                             ),
                           );
                         }),
