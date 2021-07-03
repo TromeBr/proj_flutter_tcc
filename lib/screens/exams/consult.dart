@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/patient.dart';
 import 'package:proj_flutter_tcc/models/person.dart';
@@ -21,7 +22,6 @@ class MedExamConsultScreen extends StatefulWidget {
 class MedExamConsultState extends State<MedExamConsultScreen> {
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
-  final backColor = Colors.deepPurple;
   Future<List<MedExam>> exams = examService.getExamesByCpf('50009379029');
 
   @override
@@ -89,7 +89,7 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                           if (snapshot.data != null)
                             widget._medExamList.addAll(snapshot.data);
                           return Scrollbar(
-                            isAlwaysShown: true,
+                            isAlwaysShown: false,
                             child: ListView.builder(
                               physics: BouncingScrollPhysics(),
                               itemCount: widget._medExamList.length,
@@ -99,7 +99,8 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                               },
                             ),
                           );
-                        }),
+                        }
+                    ),
                   ),
                 ),
               ],
@@ -138,7 +139,7 @@ class ExamItem extends StatelessWidget {
         subtitle: Text(_exam.date.toString(),
             style: TextStyle(color: Colors.white)),
       ),
-      color: Colors.deepPurple,
+      color: Color(systemPrimaryColor),
     );
   }
 }

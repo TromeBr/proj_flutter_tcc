@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/login_constants.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Color(systemPrimaryColor),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   side: BorderSide(

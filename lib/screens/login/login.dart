@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/login_constants.dart';
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
+import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/screens/login/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,90 +25,109 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          PaddingWidgetPattern(32.0),
-          Container(
-            child: Image.asset(
-              logoPath,
-              height: 120,
-              width: 120,
-              fit: BoxFit.contain,
-            ),
-          ),
-          PaddingWidgetPattern(8.0),
-          TextBoxStandard(
-            nameLabel: usernameLabelText,
-            controller: _loginUser,
-            icon: Icons.account_circle_sharp,
-            iconColor: Colors.indigo,
-            onChange: enableButton,
-          ),
-          TextBoxStandard(
-            nameLabel: passwordLabelText,
-            controller: _loginPassword,
-            obscureText: true,
-            wordSuggestion: false,
-            autocorrect: false,
-            onChange: enableButton,
-          ),
-          PaddingWidgetPattern(15.0),
-      Container(
-        width: 300.0,
-        height: 50.0,
-        child: OutlinedButton(
-          child: Text(
-            loginButtonText,
-            style: TextStyle(color: Colors.white),
-          ),
-          style: OutlinedButton.styleFrom(
-            backgroundColor: _loginButtonVerify ? Colors.deepPurple : Colors.grey,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
-            side: BorderSide(
-              width: 2,
-              color: Colors.black26,
-              style: BorderStyle.solid,
-            ),
-          ),
-          onPressed: _loginButtonVerify ? () => signInUser(context) : null,
-        ),
-      ),
-          PaddingWidgetPattern(8.0),
-          Text(orTyped),
-          PaddingWidgetPattern(8.0),
-      Container(
-        width: 300.0,
-        height: 50.0,
-        child: OutlinedButton(
-            child: Text(
-              userRegistrationButtonText,
-              style: TextStyle(color: Colors.white),
-            ),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              side: BorderSide(
-                width: 2,
-                color: Colors.black26,
-                style: BorderStyle.solid,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            PaddingWidgetPattern(32.0),
+            Container(
+              child: Image.asset(
+                LOGOPATH,
+                height: 120,
+                width: 120,
+                fit: BoxFit.contain,
               ),
             ),
-            onPressed: () {
-              final Future<UserLogin> future = Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return UserRegistrationScreen();
-                  },
+            PaddingWidgetPattern(8.0),
+            TextBoxStandard(
+              nameLabel: usernameLabelText,
+              controller: _loginUser,
+              icon: Icons.account_circle_sharp,
+              iconColor: Color(systemPrimaryColor),
+              onChange: enableButton,
+            ),
+            TextBoxStandard(
+              nameLabel: passwordLabelText,
+              controller: _loginPassword,
+              icon: Icons.vpn_key_sharp,
+              iconColor: Color(systemPrimaryColor),
+              obscureText: true,
+              wordSuggestion: false,
+              autocorrect: false,
+              onChange: enableButton,
+            ),
+            PaddingWidgetPattern(15.0),
+            Container(
+              width: 300.0,
+              height: 50.0,
+              child: OutlinedButton(
+                child: Text(
+                  loginButtonText,
+                  style: TextStyle(color: Colors.white),
                 ),
-              );
-              future.then((UserLogin) {});
-            }),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: _loginButtonVerify
+                      ? Color(systemPrimaryColor)
+                      : Colors.grey,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  side: BorderSide(
+                    width: 2,
+                    color: Colors.black26,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                //onPressed: _loginButtonVerify ? () => signInUser(context) : null, // DEBUG do usuário digitado
+                onPressed: _loginButtonVerify
+                    ? () => goToMedConsultScreenTest(context)
+                    : null,
+              ),
+            ),
+            PaddingWidgetPattern(8.0),
+            Text(orTyped),
+            PaddingWidgetPattern(8.0),
+            Container(
+              width: 300.0,
+              height: 50.0,
+              child: OutlinedButton(
+                  child: Text(
+                    userRegistrationButtonText,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Color(systemPrimaryColor),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    side: BorderSide(
+                      width: 2,
+                      color: Colors.black26,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  onPressed: () {
+                    final Future<UserLogin> future = Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return UserRegistrationScreen();
+                        },
+                      ),
+                    );
+                    future.then((UserLogin) {});
+                  }),
+            ),
+          ],
+        ),
       ),
+    );
+  }
 
-        ],
+  void goToMedConsultScreenTest(BuildContext context) {
+    final Future<UserLogin> future = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return MedExamConsultScreen();
+        },
       ),
     );
   }

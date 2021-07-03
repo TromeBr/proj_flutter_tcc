@@ -1,8 +1,16 @@
+// GERAL
+const systemPrimaryColor = 0xFFF55E61;
+const systemSecundaryColor = 0xFFFFFFFF;
+
+
+
+
 
 //Images Path
-const logoPath = 'assets/images/PUC_SP.png';
+const LOGOPATH = 'assets/images/PUC_SP.png';
+const GENERICPDFPATH = 'assets/images/generic_PDF.png';
 
-
+// LOGIN
 //Label Login
 const usernameLabelText = 'Nome de usuário';
 const passwordLabelText = 'Senha';
