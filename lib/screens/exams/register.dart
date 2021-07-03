@@ -18,7 +18,6 @@ class ExamRegisterScreen extends StatefulWidget {
     return state;
   }
 }
-
 class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerCampo1 = TextEditingController();
   final TextEditingController _registerCampo2 = TextEditingController();
@@ -28,6 +27,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   //ImagePicker
   PickedFile _image;
   File imageFile;
+
 
   //FilePicker
   String _fileName;
@@ -227,7 +227,6 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
       ),
     );
   }
-
   void _imagePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,

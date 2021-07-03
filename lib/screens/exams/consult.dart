@@ -21,7 +21,6 @@ class MedExamConsultScreen extends StatefulWidget {
 class MedExamConsultState extends State<MedExamConsultScreen> {
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
-
   @override
   Widget build(BuildContext context) {
     final pessoaTeste = new Person(
