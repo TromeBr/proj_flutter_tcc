@@ -11,6 +11,7 @@ class TextBoxStandard extends StatefulWidget {
   final bool autocorrect;
   final TextInputType keyboardType;
   final Function onChange;
+  final Function onTap;
 
 
   TextBoxStandard({
@@ -24,6 +25,7 @@ class TextBoxStandard extends StatefulWidget {
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
     this.onChange,
+    this.onTap,
   });
 
   @override
@@ -39,6 +41,7 @@ class TextBoxStandard extends StatefulWidget {
       autocorrect: this.autocorrect,
       keyboardType: this.keyboardType,
       onChange: this.onChange,
+      onTap: this.onTap,
     );
   }
 }
@@ -54,6 +57,7 @@ class TextBoxState extends State<TextBoxStandard> {
   final bool autocorrect;
   final TextInputType keyboardType;
   final Function onChange;
+  final Function onTap;
   bool _isHidden;
 
   TextBoxState({
@@ -67,6 +71,7 @@ class TextBoxState extends State<TextBoxStandard> {
     this.autocorrect = true,
     this.keyboardType = TextInputType.text,
     this.onChange,
+    this.onTap,
   });
   initState(){
       _isHidden = obscureText;
@@ -94,6 +99,7 @@ class TextBoxState extends State<TextBoxStandard> {
         autocorrect: autocorrect,
         keyboardType: keyboardType,
         onChanged: onChange,
+        onTap: onTap,
       ),
     );
   }

@@ -7,6 +7,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/medExam.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class ExamRegisterScreen extends StatefulWidget {
   ExamRegisterForm state;
@@ -18,16 +21,17 @@ class ExamRegisterScreen extends StatefulWidget {
     return state;
   }
 }
+
 class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerCampo1 = TextEditingController();
   final TextEditingController _registerCampo2 = TextEditingController();
   final TextEditingController _registerCampo3 = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
+  var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
 
   //ImagePicker
   PickedFile _image;
   File imageFile;
-
 
   //FilePicker
   String _fileName;
@@ -42,6 +46,8 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     _image = null;
     imageFile = null;
     filePath = null;
+    DateTime now = DateTime.now();
+    _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString();
   }
 
   Future _getImage(ImageSource source) async {
@@ -69,7 +75,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         child: Column(
           children: [
             TextBoxStandard(
-              nameLabel: 'Campo 1',
+              nameLabel: 'Exame',
               controller: _registerCampo1,
             ),
             TextBoxStandard(
@@ -80,10 +86,18 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
               nameLabel: 'Campo 3',
               controller: _registerCampo3,
             ),
-            TextBoxStandard(
-              nameLabel: 'Data',
-              controller: _registerData,
-              keyboardType: TextInputType.datetime,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                inputFormatters: [maskDate],
+                controller: _registerData,
+                style: TextStyle(fontSize: 24.0),
+                decoration: InputDecoration(
+                    labelText: 'data',
+                    suffix: InkWell(
+                        onTap: () => _selectDate(context),
+                        child: Icon(Icons.calendar_today, color: Color(systemPrimaryColor),))),
+              ),
             ),
             PaddingWidgetPattern(10.0),
             Row(
@@ -166,15 +180,17 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                                       )
                                     : getTypedImage(filePath, fileExtension)),
                                 Flexible(
-                                  child: filePath != null && fileExtension == 'pdf' ?
-                                  Container(
-                                    width: 70,
-                                    child: Text(
-                                      _fileName,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ): Text(''),
+                                  child:
+                                      filePath != null && fileExtension == 'pdf'
+                                          ? Container(
+                                              width: 70,
+                                              child: Text(
+                                                _fileName,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            )
+                                          : Text(''),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
@@ -218,7 +234,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  _CreateExam(context);
                 },
               ),
             ),
@@ -227,6 +243,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
       ),
     );
   }
+
   void _imagePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -298,5 +315,71 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         fit: BoxFit.scaleDown,
       );
     }
+  }
+
+  Widget _CreateExam(BuildContext context) {
+    List<String> _camposAlert = [];
+    final String exam = _registerCampo1.text;
+    final String campo2 = _registerCampo2.text;
+    final String campo3 = _registerCampo3.text;
+    final DateTime date = DateTime.parse(_registerData.text != ''
+        ? _registerData.text.split('/').reversed.join('')
+        : '1900/01/01');
+
+    if (exam.isEmpty) {
+      _camposAlert.add('Exame');
+    }
+    if (campo2.isEmpty) {
+      _camposAlert.add('Campo 2');
+    }
+    if (campo3.isEmpty) {
+      _camposAlert.add('Campo 3');
+    }
+    if (DateFormat('yyyy-MM-dd').format(date).toString() == '1900-01-01') {
+      _camposAlert.add('Data');
+    }
+
+    if (_camposAlert.isEmpty) {
+      final createdExam = MedExam(exam, date);
+      Navigator.pop(context, createdExam);
+    } else {
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Campo não Preenhid'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  for (var campo in _camposAlert) Text('Campo: ' + campo),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Approve'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  _selectDate(BuildContext context) async {
+    return showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+    ).then((date) {
+      setState(() {
+        _registerData.text = DateFormat('dd/MM/yyyy').format(date).toString();
+      });
+    });
   }
 }

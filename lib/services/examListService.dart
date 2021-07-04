@@ -18,8 +18,8 @@ Future<List<MedExam>> getExamesByCpf(String cpf) async {
       List examsResponse = jsonDecode(response.body);
       List<MedExam> medExams = [];
       examsResponse.forEach((exam) {
-        medExams.add(new MedExam(exam['exam'], DateTime.parse(exam['date']), exam['file'],
-            exam['requestingPhysician'], exam['reportingPhysician']));
+        medExams.add(new MedExam(exam['exam'], DateTime.parse(exam['date']), file: exam['file'],
+            requestingPhysician: exam['requestingPhysician'], reportingPhysician: exam['reportingPhysician']));
       });
       return medExams;
     }
