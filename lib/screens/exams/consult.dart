@@ -19,10 +19,33 @@ class MedExamConsultScreen extends StatefulWidget {
   }
 }
 
-class MedExamConsultState extends State<MedExamConsultScreen> {
+class MedExamConsultState extends State<MedExamConsultScreen>
+    with TickerProviderStateMixin {
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
   Future<List<MedExam>> exams = examService.getExamesByCpf('50009379029');
+  AnimationController controller;
+  bool _showCircle;
+
+  @override
+  void initState() {
+    _showCircle = widget._medExamList.isEmpty;
+    if (widget._medExamList.isNotEmpty) widget._medExamList.clear();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +98,17 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                     ),
                   ),
                 ),
+                (_showCircle
+                    ? SizedBox(
+                        child: CircularProgressIndicator(
+                          value: controller.value,
+                          color: Color(systemPrimaryColor),
+                          strokeWidth: 2,
+                        ),
+                      width: 100 ,
+                      height: 100 ,
+                      )
+                    : SizedBox.shrink()),
                 Expanded(
                   flex: 3,
                   child: Container(
@@ -82,12 +116,12 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                     margin: margin,
                     child: FutureBuilder<List<MedExam>>(
                         future: exams,
-                        builder: (
-                          BuildContext context,
-                          AsyncSnapshot<List<MedExam>> snapshot
-                        ) {
-                          if (snapshot.data != null)
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<MedExam>> snapshot) {
+                          if (snapshot.data != null && snapshot.data.length > widget._medExamList.length) {
                             widget._medExamList.addAll(snapshot.data);
+                            _showCircle = false;
+                          }
                           return Scrollbar(
                             isAlwaysShown: false,
                             child: ListView.builder(
@@ -99,8 +133,7 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
                               },
                             ),
                           );
-                        }
-                    ),
+                        }),
                   ),
                 ),
               ],
@@ -108,8 +141,8 @@ class MedExamConsultState extends State<MedExamConsultScreen> {
           ),
         ),
         drawer: HamburguerMenu());
-  }
 
+  }
   void _examsUpdate(MedExam examItem) {
     if (examItem != null) {
       setState(() {
@@ -134,10 +167,10 @@ class ExamItem extends StatelessWidget {
               : Icons.assignment_turned_in_sharp,
           color: Colors.white,
         ),
-        title: Text(_exam.exam.toString(),
-            style: TextStyle(color: Colors.white)),
-        subtitle: Text(_exam.date.toString(),
-            style: TextStyle(color: Colors.white)),
+        title:
+            Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
+        subtitle:
+            Text(_exam.date.toString(), style: TextStyle(color: Colors.white)),
       ),
       color: Color(systemPrimaryColor),
     );

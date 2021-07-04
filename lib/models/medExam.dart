@@ -11,11 +11,11 @@ class MedExam {
   MedExam(
     //this.medExamPatient,
     this.exam,
-    this.date,
+    this.date, {
     this.file,
     this.requestingPhysician,
     this.reportingPhysician,
-  );
+  });
 
   @override
   String toString() {
