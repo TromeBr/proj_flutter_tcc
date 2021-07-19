@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
@@ -170,7 +171,7 @@ class ExamItem extends StatelessWidget {
         title:
             Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
         subtitle:
-            Text(_exam.date.toString(), style: TextStyle(color: Colors.white)),
+            Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(), style: TextStyle(color: Colors.white)),
       ),
       color: Color(systemPrimaryColor),
     );

@@ -23,9 +23,9 @@ class ExamRegisterScreen extends StatefulWidget {
 }
 
 class ExamRegisterForm extends State<ExamRegisterScreen> {
-  final TextEditingController _registerCampo1 = TextEditingController();
-  final TextEditingController _registerCampo2 = TextEditingController();
-  final TextEditingController _registerCampo3 = TextEditingController();
+  final TextEditingController _registerExam = TextEditingController();
+  final TextEditingController _registerDoc = TextEditingController();
+  final TextEditingController _registerLab = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
 
@@ -76,15 +76,15 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
           children: [
             TextBoxStandard(
               nameLabel: 'Exame',
-              controller: _registerCampo1,
+              controller: _registerExam,
             ),
             TextBoxStandard(
-              nameLabel: 'Campo 2',
-              controller: _registerCampo2,
+              nameLabel: 'Médico Solicitante',
+              controller: _registerDoc,
             ),
             TextBoxStandard(
-              nameLabel: 'Campo 3',
-              controller: _registerCampo3,
+              nameLabel: 'Laboratório',
+              controller: _registerLab,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -319,9 +319,9 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
 
   Widget _CreateExam(BuildContext context) {
     List<String> _camposAlert = [];
-    final String exam = _registerCampo1.text;
-    final String campo2 = _registerCampo2.text;
-    final String campo3 = _registerCampo3.text;
+    final String exam = _registerExam.text;
+    final String doctorName = _registerDoc.text;
+    final String labName = _registerLab.text;
     final DateTime date = DateTime.parse(_registerData.text != ''
         ? _registerData.text.split('/').reversed.join('')
         : '1900/01/01');
@@ -329,11 +329,11 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     if (exam.isEmpty) {
       _camposAlert.add('Exame');
     }
-    if (campo2.isEmpty) {
-      _camposAlert.add('Campo 2');
+    if (doctorName.isEmpty) {
+      _camposAlert.add('Médico Solicitante');
     }
-    if (campo3.isEmpty) {
-      _camposAlert.add('Campo 3');
+    if (labName.isEmpty) {
+      _camposAlert.add('Laboratório');
     }
     if (DateFormat('yyyy-MM-dd').format(date).toString() == '1900-01-01') {
       _camposAlert.add('Data');
@@ -348,7 +348,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Campo não Preenhid'),
+            title: const Text('Campo não Preenchido'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
@@ -358,7 +358,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Approve'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
