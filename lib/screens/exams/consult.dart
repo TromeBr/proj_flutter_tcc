@@ -1,179 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:proj_flutter_tcc/components/SearchBar.dart';
-import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
+import 'package:full_screen_image/full_screen_image.dart';
+import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:path/path.dart' as fileExtension;
 import 'package:proj_flutter_tcc/models/medExam.dart';
-import 'package:proj_flutter_tcc/models/patient.dart';
-import 'package:proj_flutter_tcc/models/person.dart';
-import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import 'register.dart';
 
-class MedExamConsultScreen extends StatefulWidget {
-  final List<MedExam> _medExamList = <MedExam>[];
+class ExamConsultScreen extends StatefulWidget {
+  ExamConsultForm state;
+  final MedExam exam;
+
+  ExamConsultScreen(this.exam);
 
   @override
   State<StatefulWidget> createState() {
-    return MedExamConsultState();
+    var state = ExamConsultForm(this.exam);
+    this.state = state;
+    return state;
   }
 }
 
-class MedExamConsultState extends State<MedExamConsultScreen>
-    with TickerProviderStateMixin {
-  final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
-  final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
-  Future<List<MedExam>> exams = examService.getExamesByCpf('50009379029');
-  AnimationController controller;
-  bool _showCircle;
+class ExamConsultForm extends State<ExamConsultScreen> {
+  final TextEditingController _registerExam = TextEditingController();
+  final TextEditingController _registerDoc = TextEditingController();
+  final TextEditingController _registerLab = TextEditingController();
+  final TextEditingController _registerData = TextEditingController();
+  var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
+  final MedExam exam;
 
-  @override
-  void initState() {
-    _showCircle = widget._medExamList.isEmpty;
-    if (widget._medExamList.isNotEmpty) widget._medExamList.clear();
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..addListener(() {
-        setState(() {});
-      });
-    controller.repeat(reverse: true);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  ExamConsultForm(this.exam) {
+    _registerExam.text = exam.exam;
+    _registerDoc.text = exam.exam;
+    _registerLab.text = exam.exam;
+    _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    final pessoaTeste = new Person(
-        'Gabriel', 18, '50009379029', DateTime.now(), 'Pinda', 'SP', 'Brasil');
-    final pacienteTeste = new Patient(pessoaTeste);
-    var width = MediaQuery.of(context).size.width;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        appBar: AppBarPattern(
-          titleScreen: 'Consulta de Exames',
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                final Future<MedExam> future = Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ExamRegisterScreen();
-                    },
-                  ),
-                );
-                future.then((examItem) => _examsUpdate(examItem));
-              },
+      appBar: AppBarPattern(titleScreen: 'Exame de ' + exam.exam),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextBoxStandard(
+              nameLabel: 'Exame',
+              controller: _registerExam,
             ),
-          ],
-        ),
-        body: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: width,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            margin: searchMargin,
-                            alignment: Alignment.topCenter,
-                            child: SearchBar(),
-                          ),
+            TextBoxStandard(
+              nameLabel: 'Médico Solicitante',
+              controller: _registerDoc,
+            ),
+            TextBoxStandard(
+              nameLabel: 'Laboratório',
+              controller: _registerLab,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                readOnly: true,
+                inputFormatters: [maskDate],
+                controller: _registerData,
+                style: TextStyle(fontSize: 24.0),
+                decoration: InputDecoration(
+                  labelText: 'Data',
+                  //labelStyle: TextStyle(color: Color(systemPrimaryColor))
+                ),
+              ),
+            ),
+            if(exam.file != null)
+              Container(
+                child: fileExtension.extension(exam.file.path) != '.pdf' ?
+                FullScreenWidget(
+                  child: Center(
+                    child: Hero(
+                      tag: "smallImage",
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.file(
+                          exam.file,
+                          fit: BoxFit.cover,
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                (_showCircle
-                    ? SizedBox(
-                        child: CircularProgressIndicator(
-                          value: controller.value,
-                          color: Color(systemPrimaryColor),
-                          strokeWidth: 2,
-                        ),
-                      width: 100 ,
-                      height: 100 ,
-                      )
-                    : SizedBox.shrink()),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    width: width,
-                    margin: margin,
-                    child: FutureBuilder<List<MedExam>>(
-                        future: exams,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<MedExam>> snapshot) {
-                          if (snapshot.data != null && snapshot.data.length > widget._medExamList.length) {
-                            widget._medExamList.addAll(snapshot.data);
-                            _showCircle = false;
-                          }
-                          return Scrollbar(
-                            isAlwaysShown: false,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              itemCount: widget._medExamList.length,
-                              itemBuilder: (context, indice) {
-                                final exam = widget._medExamList[indice];
-                                return ExamItem(exam);
-                              },
-                            ),
-                          );
-                        }),
-                  ),
-                ),
-              ],
-            ),
-          ),
+                )
+                :
+                Text('PDF_AQUI'),
+                width: 150,
+              ),
+          ],
         ),
-        drawer: HamburguerMenu());
-
-  }
-  void _examsUpdate(MedExam examItem) {
-    if (examItem != null) {
-      setState(() {
-        widget._medExamList.add(examItem);
-      });
-    }
-  }
-}
-
-class ExamItem extends StatelessWidget {
-  final MedExam _exam;
-
-  ExamItem(this._exam);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: Icon(
-          _exam.exam == 'Sangue' || _exam.exam == 'Pézinho'
-              ? Icons.accessibility_new_sharp
-              : Icons.assignment_turned_in_sharp,
-          color: Colors.white,
-        ),
-        title:
-            Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
-        subtitle:
-            Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(), style: TextStyle(color: Colors.white)),
       ),
-      color: Color(systemPrimaryColor),
     );
   }
 }

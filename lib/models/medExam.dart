@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:proj_flutter_tcc/models/patient.dart';
 
 class MedExam {
   //final Patient medExamPatient;
   final String exam;
-  final String file;
+  final File file;
   final Object requestingPhysician;
   final Object reportingPhysician;
   final DateTime date;

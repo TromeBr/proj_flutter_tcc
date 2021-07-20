@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'models/consts.dart';
-import 'screens/exams/consult.dart';
-import 'screens/exams/register.dart';
 import 'screens/login/login.dart';
 
 void main() => runApp(TCCApp());

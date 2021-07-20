@@ -3,7 +3,7 @@ import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
-import 'package:proj_flutter_tcc/screens/exams/consult.dart';
+import 'package:proj_flutter_tcc/screens/exams/consultList.dart';
 import 'package:proj_flutter_tcc/screens/login/register.dart';
 
 class LoginScreen extends StatefulWidget {

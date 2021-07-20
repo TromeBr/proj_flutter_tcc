@@ -89,11 +89,12 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                readOnly: true,
                 inputFormatters: [maskDate],
                 controller: _registerData,
                 style: TextStyle(fontSize: 24.0),
                 decoration: InputDecoration(
-                    labelText: 'data',
+                    labelText: 'Data',
                     suffix: InkWell(
                         onTap: () => _selectDate(context),
                         child: Icon(Icons.calendar_today, color: Color(systemPrimaryColor),))),
@@ -325,6 +326,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     final DateTime date = DateTime.parse(_registerData.text != ''
         ? _registerData.text.split('/').reversed.join('')
         : '1900/01/01');
+    final File fileRegister = filePath != null ? filePath : imageFile != null ? imageFile : null;
 
     if (exam.isEmpty) {
       _camposAlert.add('Exame');
@@ -340,7 +342,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     }
 
     if (_camposAlert.isEmpty) {
-      final createdExam = MedExam(exam, date);
+      final createdExam = MedExam(exam, date, file: fileRegister);
       Navigator.pop(context, createdExam);
     } else {
       showDialog<void>(
