@@ -34,6 +34,8 @@ dependencies:
   http: ^0.13.3
   intl: ^0.17.0
   mask_text_input_formatter: ^2.0.0
+  full_screen_image: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:
