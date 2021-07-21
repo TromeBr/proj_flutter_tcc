@@ -15,6 +15,7 @@ class TextBoxStandard extends StatefulWidget {
   final bool readOnly;
 
 
+
   TextBoxStandard({
     this.nameLabel,
     this.hintLabel,
@@ -28,6 +29,7 @@ class TextBoxStandard extends StatefulWidget {
     this.onChange,
     this.onTap,
     this.readOnly = false
+
   });
 
   @override
@@ -62,6 +64,7 @@ class TextBoxState extends State<TextBoxStandard> {
   final Function onChange;
   final Function onTap;
   final bool readOnly;
+  
   bool _isHidden;
 
   TextBoxState({

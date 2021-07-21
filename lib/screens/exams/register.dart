@@ -328,6 +328,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         : '1900/01/01');
     final File fileRegister = filePath != null ? filePath : imageFile != null ? imageFile : null;
 
+
     if (exam.isEmpty) {
       _camposAlert.add('Exame');
     }
