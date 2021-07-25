@@ -107,8 +107,8 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                           color: Color(systemPrimaryColor),
                           strokeWidth: 2,
                         ),
-                      width: 100 ,
-                      height: 100 ,
+                        width: 100,
+                        height: 100,
                       )
                     : SizedBox.shrink()),
                 Expanded(
@@ -120,9 +120,33 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                         future: exams,
                         builder: (BuildContext context,
                             AsyncSnapshot<List<MedExam>> snapshot) {
-                          if (snapshot.data != null && snapshot.data.length > widget._medExamList.length) {
+                          if (snapshot.data != null &&
+                              snapshot.data.length >
+                                  widget._medExamList.length) {
                             widget._medExamList.addAll(snapshot.data);
                             _showCircle = false;
+                          } else if ((snapshot.hasError ||
+                              snapshot.data?.length == 0) && widget._medExamList.length == 0) {
+                            _showCircle = false;
+                            return Column(
+                              children: [
+                                Icon(
+                                  Icons.assignment_outlined,
+                                  color: Color(systemPrimaryColor),
+                                  size: 100,
+                                ),
+                                PaddingWidgetPattern(10),
+                                Text(
+                                  "Nenhum exame cadastrado!",
+                                  style: TextStyle(
+                                    color: Color(systemPrimaryColor),
+                                    fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            );
                           }
                           return Scrollbar(
                             isAlwaysShown: false,
@@ -143,8 +167,8 @@ class MedExamConsultState extends State<MedExamConsultScreen>
           ),
         ),
         drawer: HamburguerMenu());
-
   }
+
   void _examsUpdate(MedExam examItem) {
     if (examItem != null) {
       setState(() {
@@ -171,8 +195,8 @@ class ExamItem extends StatelessWidget {
         ),
         title:
             Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
-        subtitle:
-            Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(), style: TextStyle(color: Colors.white)),
+        subtitle: Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(),
+            style: TextStyle(color: Colors.white)),
         onTap: () {
           Navigator.push(
             context,

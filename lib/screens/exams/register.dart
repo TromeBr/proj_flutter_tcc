@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:full_screen_image/full_screen_image.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:file_picker/file_picker.dart';
@@ -70,12 +71,12 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   Widget build(BuildContext context) {
     //var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBarPattern(titleScreen: 'Cadastro de Exames'),
+      appBar: AppBarPattern(titleScreen: 'Cadastro de Exame'),
       body: SingleChildScrollView(
         child: Column(
           children: [
             TextBoxStandard(
-              nameLabel: 'Exame',
+              nameLabel: 'Tipo',
               controller: _registerExam,
             ),
             TextBoxStandard(
@@ -97,7 +98,10 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                     labelText: 'Data',
                     suffix: InkWell(
                         onTap: () => _selectDate(context),
-                        child: Icon(Icons.calendar_today, color: Color(systemPrimaryColor),))),
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: Color(systemPrimaryColor),
+                        ))),
               ),
             ),
             PaddingWidgetPattern(10.0),
@@ -174,10 +178,21 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 (imageFile != null
-                                    ? Image.file(
-                                        imageFile,
-                                        alignment: Alignment.center,
-                                        fit: BoxFit.scaleDown,
+                                    ? FullScreenWidget(
+                                        child: Center(
+                                          child: Hero(
+                                            tag: "smallImage",
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              child: Image.file(
+                                                imageFile,
+                                                alignment: Alignment.center,
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       )
                                     : getTypedImage(filePath, fileExtension)),
                                 Flexible(
@@ -326,8 +341,11 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     final DateTime date = DateTime.parse(_registerData.text != ''
         ? _registerData.text.split('/').reversed.join('')
         : '1900/01/01');
-    final File fileRegister = filePath != null ? filePath : imageFile != null ? imageFile : null;
-
+    final File fileRegister = filePath != null
+        ? filePath
+        : imageFile != null
+            ? imageFile
+            : null;
 
     if (exam.isEmpty) {
       _camposAlert.add('Exame');
@@ -375,11 +393,12 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
 
   _selectDate(BuildContext context) async {
     return showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1900),
-        lastDate: DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day)
-    ).then((date) {
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.utc(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day))
+        .then((date) {
       setState(() {
         _registerData.text = DateFormat('dd/MM/yyyy').format(date).toString();
       });

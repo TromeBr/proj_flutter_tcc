@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:full_screen_image/full_screen_image.dart';
+import 'package:proj_flutter_tcc/components/PDFViewer.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:path/path.dart' as fileExtension;
+import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 
 class ExamConsultScreen extends StatefulWidget {
   ExamConsultForm state;
@@ -29,6 +31,9 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   final MedExam exam;
+  PDFViewController PDFController;
+  int pages = 0;
+  int indexPage = 0;
 
   ExamConsultForm(this.exam) {
     _registerExam.text = exam.exam;
@@ -40,21 +45,24 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPattern(titleScreen: 'Exame de ' + exam.exam),
+      appBar: AppBarPattern(titleScreen: 'Exame'),
       body: SingleChildScrollView(
         child: Column(
           children: [
             TextBoxStandard(
-              nameLabel: 'Exame',
+              nameLabel: 'Tipo',
               controller: _registerExam,
+              readOnly: true,
             ),
             TextBoxStandard(
               nameLabel: 'Médico Solicitante',
               controller: _registerDoc,
+              readOnly: true,
             ),
             TextBoxStandard(
               nameLabel: 'Laboratório',
               controller: _registerLab,
+              readOnly: true,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -69,27 +77,63 @@ class ExamConsultForm extends State<ExamConsultScreen> {
                 ),
               ),
             ),
-            if(exam.file != null)
-              Container(
-                child: fileExtension.extension(exam.file.path) != '.pdf' ?
-                FullScreenWidget(
-                  child: Center(
-                    child: Hero(
-                      tag: "smallImage",
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.file(
-                          exam.file,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+            if (exam.file != null)
+              Column(
+                children: [
+                  PaddingWidgetPattern(10),
+                  Container(
+                    child: fileExtension.extension(exam.file.path) != '.pdf'
+                        ? FullScreenWidget(
+                            child: Center(
+                              child: Hero(
+                                tag: "smallImage",
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.file(
+                                    exam.file,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PDFViewer(exam.file)),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    GENERICPDFPATH,
+                                    alignment: Alignment.center,
+                                    width: 75,
+                                    height: 75,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      width: 70,
+                                      child: Text(
+                                        fileExtension.basenameWithoutExtension(
+                                            exam.file.path),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                    width: 150,
                   ),
-                )
-                :
-                Text('PDF_AQUI'),
-                width: 150,
-              ),
+                ],
+              )
           ],
         ),
       ),
