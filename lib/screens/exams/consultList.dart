@@ -25,7 +25,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     with TickerProviderStateMixin {
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
-  Future<List<MedExam>> exams = examService.getExamesByCpf('50009379029');
+  Future<List<MedExam>> exams = examService.getExamesByCpf();
   AnimationController controller;
   bool _showCircle;
 
@@ -51,9 +51,9 @@ class MedExamConsultState extends State<MedExamConsultScreen>
 
   @override
   Widget build(BuildContext context) {
-    final pessoaTeste = new Person(
-        'Gabriel', 18, '50009379029', DateTime.now(), 'Pinda', 'SP', 'Brasil');
-    final pacienteTeste = new Patient(pessoaTeste);
+    // final pessoaTeste = new Person(
+    //     'Gabriel', 18, '50009379029', DateTime.now(), 'Pinda', 'SP', 'Brasil');
+    // final pacienteTeste = new Patient(pessoaTeste);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -104,7 +104,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                     ? SizedBox(
                         child: CircularProgressIndicator(
                           value: controller.value,
-                          color: Color(systemPrimaryColor),
+                          color: Color(SYSTEMPRIMARYCOLOR),
                           strokeWidth: 2,
                         ),
                         width: 100,
@@ -132,14 +132,14 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                               children: [
                                 Icon(
                                   Icons.assignment_outlined,
-                                  color: Color(systemPrimaryColor),
+                                  color: Color(SYSTEMPRIMARYCOLOR),
                                   size: 100,
                                 ),
                                 PaddingWidgetPattern(10),
                                 Text(
                                   "Nenhum exame cadastrado!",
                                   style: TextStyle(
-                                    color: Color(systemPrimaryColor),
+                                    color: Color(SYSTEMPRIMARYCOLOR),
                                     fontSize: 25,
                                       fontWeight: FontWeight.bold,
                                   ),
@@ -209,7 +209,7 @@ class ExamItem extends StatelessWidget {
           //future.then((examItem) => _examsUpdate(examItem));
         },
       ),
-      color: Color(systemPrimaryColor),
+      color: Color(SYSTEMPRIMARYCOLOR),
     );
   }
 }

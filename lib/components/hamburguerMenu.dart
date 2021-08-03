@@ -13,7 +13,7 @@ class HamburguerMenu extends StatelessWidget {
         children: <Widget>[
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
-              color: Color(systemPrimaryColor),
+              color: Color(SYSTEMPRIMARYCOLOR),
             ),
             arrowColor: Colors.white,
             accountName: Text('User Test'),
@@ -22,7 +22,7 @@ class HamburguerMenu extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.person,
-                color: Color(systemPrimaryColor),
+                color: Color(SYSTEMPRIMARYCOLOR),
               ),
             ),
             onDetailsPressed: () {},

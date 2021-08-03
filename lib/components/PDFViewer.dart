@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -30,7 +29,7 @@ class _PDFViewerState extends State<PDFViewer> {
           fileExtension.basenameWithoutExtension(widget.exam.path),
           style: TextStyle(
             color: Color(
-              systemPrimaryColor,
+              SYSTEMPRIMARYCOLOR,
             ),
           ),
           overflow: TextOverflow.ellipsis,
@@ -41,7 +40,7 @@ class _PDFViewerState extends State<PDFViewer> {
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: Color(systemPrimaryColor),
+                      color: Color(SYSTEMPRIMARYCOLOR),
                     ),
                   ),
                 ),
@@ -62,7 +61,7 @@ class _PDFViewerState extends State<PDFViewer> {
               ]
             : null,
         iconTheme: IconThemeData(
-          color: Color(systemPrimaryColor),
+          color: Color(SYSTEMPRIMARYCOLOR),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,

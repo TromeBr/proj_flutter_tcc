@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:proj_flutter_tcc/components/alertBox.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/consts.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/exams/consultList.dart';
 import 'package:proj_flutter_tcc/screens/login/register.dart';
+import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 
 class LoginScreen extends StatefulWidget {
   LoginUpdateWidgetState state;
@@ -18,7 +20,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginUpdateWidgetState extends State<LoginScreen> {
-  final TextEditingController _loginUser = TextEditingController();
+  final TextEditingController _loginEmail = TextEditingController();
+  final TextEditingController _loginCPF = TextEditingController();
   final TextEditingController _loginPassword = TextEditingController();
   bool _loginButtonVerify = false;
 
@@ -39,17 +42,17 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             ),
             PaddingWidgetPattern(8.0),
             TextBoxStandard(
-              nameLabel: usernameLabelText,
-              controller: _loginUser,
+              nameLabel: EMAILLABELTEXT,
+              controller: _loginCPF,
               icon: Icons.account_circle_sharp,
-              iconColor: Color(systemPrimaryColor),
+              iconColor: Color(SYSTEMPRIMARYCOLOR),
               onChange: enableButton,
             ),
             TextBoxStandard(
-              nameLabel: passwordLabelText,
+              nameLabel: PASSWORDLABELTEXT,
               controller: _loginPassword,
               icon: Icons.vpn_key_sharp,
-              iconColor: Color(systemPrimaryColor),
+              iconColor: Color(SYSTEMPRIMARYCOLOR),
               obscureText: true,
               wordSuggestion: false,
               autocorrect: false,
@@ -61,12 +64,12 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               height: 50.0,
               child: OutlinedButton(
                 child: Text(
-                  loginButtonText,
+                  LOGINBUTTONTEXT,
                   style: TextStyle(color: Colors.white),
                 ),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: _loginButtonVerify
-                      ? Color(systemPrimaryColor)
+                      ? Color(SYSTEMPRIMARYCOLOR)
                       : Colors.grey,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
@@ -76,25 +79,22 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                //onPressed: _loginButtonVerify ? () => signInUser(context) : null, // DEBUG do usuário digitado
-                onPressed: _loginButtonVerify
-                    ? () => goToMedConsultScreenTest(context)
-                    : null,
+                onPressed: _loginButtonVerify ? () => signInUser(context): null,
               ),
             ),
             PaddingWidgetPattern(8.0),
-            Text(orTyped),
+            Text(ORTYPED),
             PaddingWidgetPattern(8.0),
             Container(
               width: 300.0,
               height: 50.0,
               child: OutlinedButton(
                   child: Text(
-                    userRegistrationButtonText,
+                    USERREGISTRATIONBUTTONTEXT,
                     style: TextStyle(color: Colors.white),
                   ),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Color(systemPrimaryColor),
+                    backgroundColor: Color(SYSTEMPRIMARYCOLOR),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
                     side: BorderSide(
@@ -104,7 +104,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () {
-                    final Future<UserLogin> future = Navigator.push(
+                    final Future<UserContext> future = Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
@@ -112,7 +112,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                         },
                       ),
                     );
-                    future.then((UserLogin) {});
+                    future.then((UserContext) {});
                   }),
             ),
           ],
@@ -121,8 +121,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
     );
   }
 
-  void goToMedConsultScreenTest(BuildContext context) {
-    final Future<UserLogin> future = Navigator.push(
+  Widget goToMedConsultScreenTest(BuildContext context) {
+    final Future<UserContext> future = Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
@@ -132,22 +132,22 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
     );
   }
 
-  void signInUser(BuildContext context) {
-    final String _user = _loginUser.text;
-    final String _password = _loginPassword.text;
-    if (_user != null && _password != null) {
-      final loginFinal = UserLogin(_user, _password);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$loginFinal'),
-        ),
-      );
-      debugPrint('$loginFinal');
-    } else {}
+  Future<Widget> signInUser(BuildContext context) async {
+    String _email = _loginCPF.text;
+    String _password = _loginPassword.text;
+    var _finalUser = await loginService.login(_email, _password);
+      if(_finalUser != null) {
+          return goToMedConsultScreenTest(context);
+        } else {
+           alert(context,"Login", "Login Inválido");
+           _loginCPF.text = '';
+           _loginPassword.text = '';
+      }
   }
 
+
   void enableButton(String _) {
-    if (_loginUser.text.isNotEmpty && _loginPassword.text.isNotEmpty) {
+    if (_loginCPF.text.isNotEmpty && _loginPassword.text.isNotEmpty) {
       setState(() {
         _loginButtonVerify = true;
       });
