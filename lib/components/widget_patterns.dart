@@ -21,16 +21,16 @@ class AppBarPattern extends StatelessWidget implements PreferredSizeWidget {
   const AppBarPattern({Key key, this.titleScreen, this.actions}) : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(100);
+  Size get preferredSize => const Size.fromHeight(50);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: IconThemeData(color: Color(systemPrimaryColor),),
+      iconTheme: IconThemeData(color: Color(SYSTEMPRIMARYCOLOR),),
       centerTitle: true,
       title: Text(
         titleScreen,
-        style: TextStyle(color: Color(systemPrimaryColor),),
+        style: TextStyle(color: Color(SYSTEMPRIMARYCOLOR),),
       ),
       backgroundColor: Colors.transparent,
       elevation: 0.0,

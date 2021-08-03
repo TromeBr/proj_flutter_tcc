@@ -1,6 +1,6 @@
 // GERAL
-const systemPrimaryColor = 0xFFF55E61;
-const systemSecundaryColor = 0xFFFFFFFF;
+const SYSTEMPRIMARYCOLOR = 0xFFF55E61;
+const SYSTEMSECUNDARYCOLOR = 0xFFFFFFFF;
 
 
 
@@ -12,19 +12,20 @@ const GENERICPDFPATH = 'assets/images/generic_PDF.png';
 
 // LOGIN
 //Label Login
-const usernameLabelText = 'Nome de usuário';
-const passwordLabelText = 'Senha';
-const passwordAgainLabelText = 'Digite a senha novamente';
-const emailLabelText = 'E-mail';
-const CPFLabelText = 'CPF';
-const registrationTitleScreen = 'Registro de usuário';
+const NAMELABELTEXT = 'Primeiro nome';
+const SURNAMELABELTEXT = 'Sobrenome';
+const PASSWORDLABELTEXT = 'Senha';
+const PASSWORDAGAINLABELTEXT = 'Digite a senha novamente';
+const EMAILLABELTEXT = 'E-mail';
+const CPFLABELTEXT = 'CPF';
+const REGISTRATIONTITLESCREEN = 'Registro de usuário';
 
 
 //Button Login
-const userRegistrationButtonText = 'Registre-se';
-const loginButtonText = 'Login';
-const recordUserButtonText = 'Registrar';
+const USERREGISTRATIONBUTTONTEXT = 'Registre-se';
+const LOGINBUTTONTEXT = 'Login';
+const RECORDUSERBUTTONTEXT = 'Registrar';
 
 
 //Miscellaneous
-const orTyped = 'Ou';
+const ORTYPED = 'Ou';

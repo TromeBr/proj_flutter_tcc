@@ -12,8 +12,8 @@ class TCCApp extends StatelessWidget {
       home: LoginScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Color(systemPrimaryColor),
-        accentColor: Color(systemSecundaryColor),
+        primaryColor: Color(SYSTEMPRIMARYCOLOR),
+        accentColor: Color(SYSTEMSECUNDARYCOLOR),
         scrollbarTheme: ScrollbarThemeData().copyWith(
           thumbColor: MaterialStateProperty.all(Colors.grey[500]),
         ),

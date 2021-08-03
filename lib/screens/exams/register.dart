@@ -100,7 +100,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                         onTap: () => _selectDate(context),
                         child: Icon(
                           Icons.calendar_today,
-                          color: Color(systemPrimaryColor),
+                          color: Color(SYSTEMPRIMARYCOLOR),
                         ))),
               ),
             ),
@@ -120,7 +120,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: imageFile == null && filePath == null
-                          ? Color(systemPrimaryColor)
+                          ? Color(SYSTEMPRIMARYCOLOR)
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
@@ -148,7 +148,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: imageFile == null && filePath == null
-                          ? Color(systemPrimaryColor)
+                          ? Color(SYSTEMPRIMARYCOLOR)
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
@@ -213,7 +213,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                                 ),
                                 FloatingActionButton(
                                   child: Icon(Icons.close_sharp),
-                                  backgroundColor: Color(systemPrimaryColor),
+                                  backgroundColor: Color(SYSTEMPRIMARYCOLOR),
                                   foregroundColor: Colors.white,
                                   mini: true,
                                   tooltip: 'Deletar ' +
@@ -240,7 +240,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
               child: OutlinedButton(
                 child: Text('Cadastrar', style: TextStyle(color: Colors.white)),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: Color(systemPrimaryColor),
+                  backgroundColor: Color(SYSTEMPRIMARYCOLOR),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   side: BorderSide(

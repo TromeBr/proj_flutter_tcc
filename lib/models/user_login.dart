@@ -1,16 +1,30 @@
 
-class UserLogin {
-  final String loginUser;
-  final String loginPassword;
-  String loginEmail;
-  String loginCPF;
+class UserContext {
+  final String name;
+  String password;
+  String surname;
+  String email;
+  DateTime birthDate;
+  String sex;
+  String CPF;
+  String statusCode;
 
 
-  UserLogin(this.loginUser, this.loginPassword, {this.loginEmail, this.loginCPF});
+  UserContext(this.CPF, {this.password, this.surname, this.name, this.email, this.birthDate, this.sex});
+
+  UserContext.fromJson(Map<String, dynamic> json)
+      : name = json['nome'],
+        email = json['email'],
+        surname = json['sobrenome'],
+        CPF = json['cpf'],
+        birthDate = json['birthDate'],
+        sex = json['sexo'],
+        statusCode = json['statusCode'];
+
 
 
   @override
   String toString() {
-    return 'UserLogin{User: $loginUser, Password: $loginPassword}';
+    return 'UserLogin{User: $name, Password: $password}';
   }
 }
