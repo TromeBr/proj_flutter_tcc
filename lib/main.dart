@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'models/consts.dart';
+import 'models/constants.dart' as Constants;
 import 'screens/login/login.dart';
 
 void main() => runApp(TCCApp());
@@ -12,8 +12,8 @@ class TCCApp extends StatelessWidget {
       home: LoginScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Color(SYSTEMPRIMARYCOLOR),
-        accentColor: Color(SYSTEMSECUNDARYCOLOR),
+        primaryColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+        accentColor: Color(Constants.SYSTEM_SECUNDARY_COLOR),
         scrollbarTheme: ScrollbarThemeData().copyWith(
           thumbColor: MaterialStateProperty.all(Colors.grey[500]),
         ),

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 
 class PaddingWidgetPattern extends StatelessWidget {
   final double _paddingValue;
@@ -26,11 +26,11 @@ class AppBarPattern extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: IconThemeData(color: Color(SYSTEMPRIMARYCOLOR),),
+      iconTheme: IconThemeData(color: Color(Constants.SYSTEM_PRIMARY_COLOR),),
       centerTitle: true,
       title: Text(
         titleScreen,
-        style: TextStyle(color: Color(SYSTEMPRIMARYCOLOR),),
+        style: TextStyle(color: Color(Constants.SYSTEM_PRIMARY_COLOR),),
       ),
       backgroundColor: Colors.transparent,
       elevation: 0.0,

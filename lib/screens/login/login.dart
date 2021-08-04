@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_flutter_tcc/components/alertBox.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/exams/consultList.dart';
 import 'package:proj_flutter_tcc/screens/login/register.dart';
@@ -34,7 +34,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             PaddingWidgetPattern(32.0),
             Container(
               child: Image.asset(
-                LOGOPATH,
+                Constants.LOGO_PATH,
                 height: 120,
                 width: 120,
                 fit: BoxFit.contain,
@@ -42,17 +42,17 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             ),
             PaddingWidgetPattern(8.0),
             TextBoxStandard(
-              nameLabel: EMAILLABELTEXT,
+              nameLabel: Constants.EMAIL_LABEL_TEXT,
               controller: _loginCPF,
               icon: Icons.account_circle_sharp,
-              iconColor: Color(SYSTEMPRIMARYCOLOR),
+              iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
               onChange: enableButton,
             ),
             TextBoxStandard(
-              nameLabel: PASSWORDLABELTEXT,
+              nameLabel: Constants.PASSWORD_LABEL_TEXT,
               controller: _loginPassword,
               icon: Icons.vpn_key_sharp,
-              iconColor: Color(SYSTEMPRIMARYCOLOR),
+              iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
               obscureText: true,
               wordSuggestion: false,
               autocorrect: false,
@@ -64,12 +64,12 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               height: 50.0,
               child: OutlinedButton(
                 child: Text(
-                  LOGINBUTTONTEXT,
+                  Constants.LOGIN_BUTTON_TEXT,
                   style: TextStyle(color: Colors.white),
                 ),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: _loginButtonVerify
-                      ? Color(SYSTEMPRIMARYCOLOR)
+                      ? Color(Constants.SYSTEM_PRIMARY_COLOR)
                       : Colors.grey,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
@@ -83,18 +83,18 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               ),
             ),
             PaddingWidgetPattern(8.0),
-            Text(ORTYPED),
+            Text(Constants.OR_TYPED),
             PaddingWidgetPattern(8.0),
             Container(
               width: 300.0,
               height: 50.0,
               child: OutlinedButton(
                   child: Text(
-                    USERREGISTRATIONBUTTONTEXT,
+                    Constants.USER_REGISTRATION_BUTTON_TEXT,
                     style: TextStyle(color: Colors.white),
                   ),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Color(SYSTEMPRIMARYCOLOR),
+                    backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
                     side: BorderSide(

@@ -5,7 +5,7 @@ import 'package:proj_flutter_tcc/components/PDFViewer.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:path/path.dart' as fileExtension;
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -109,7 +109,7 @@ class ExamConsultForm extends State<ExamConsultScreen> {
                               child: Row(
                                 children: [
                                   Image.asset(
-                                    GENERICPDFPATH,
+                                    Constants.GENERIC_PDF_PATH,
                                     alignment: Alignment.center,
                                     width: 75,
                                     height: 75,

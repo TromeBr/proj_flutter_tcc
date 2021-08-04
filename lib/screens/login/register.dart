@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proj_flutter_tcc/components/alertBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/exams/consultList.dart';
@@ -35,25 +35,25 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPattern(titleScreen: REGISTRATIONTITLESCREEN,),
+      appBar: AppBarPattern(titleScreen: Constants.REGISTRATION_TITLE_SCREEN,),
       body: SingleChildScrollView(
         child: Column(
           children: [
             //PaddingWidgetPattern(4.0),
             TextBoxStandard(
-              nameLabel: NAMELABELTEXT,
+              nameLabel: Constants.NAME_LABEL_TEXT,
               controller: _registerFirstName,
             ),
             TextBoxStandard(
-              nameLabel: SURNAMELABELTEXT,
+              nameLabel: Constants.SURNAME_LABEL_TEXT,
               controller: _registerSurname,
             ),
             TextBoxStandard(
-              nameLabel: EMAILLABELTEXT,
+              nameLabel: Constants.EMAIL_LABEL_TEXT,
               controller: _registerEmail,
             ),
             TextBoxStandard(
-              nameLabel: CPFLABELTEXT,
+              nameLabel: Constants.CPF_LABEL_TEXT,
               controller: _registerCPF,
             ),
             Padding(
@@ -69,18 +69,18 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
                         onTap: () => _selectDate(context),
                         child: Icon(
                           Icons.calendar_today,
-                          color: Color(SYSTEMPRIMARYCOLOR),
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                         ))),
               ),
             ),
             TextBoxStandard(
-              nameLabel: PASSWORDLABELTEXT,
+              nameLabel: Constants.PASSWORD_LABEL_TEXT,
               controller: _registerPassword,
               onChange: MatchingPasswords,
               obscureText: true,
             ),
             TextBoxStandard(
-              nameLabel: PASSWORDAGAINLABELTEXT,
+              nameLabel: Constants.PASSWORD_AGAIN_LABEL_TEXT,
               controller: _registerPasswordAgain,
               onChange: MatchingPasswords,
               obscureText: true,
@@ -91,11 +91,11 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
               width: 300.0,
               child: OutlinedButton(
                 child: Text(
-                  RECORDUSERBUTTONTEXT,
+                  Constants.RECORD_USER_BUTTON_TEXT,
                   style: TextStyle(color: Colors.white),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor:_matchingPasswords ? Color(SYSTEMPRIMARYCOLOR) : Colors.grey,
+                  backgroundColor:_matchingPasswords ? Color(Constants.SYSTEM_PRIMARY_COLOR) : Colors.grey,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   side: BorderSide(
