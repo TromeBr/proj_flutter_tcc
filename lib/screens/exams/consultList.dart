@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/patient.dart';
 import 'package:proj_flutter_tcc/models/person.dart';
@@ -51,9 +51,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
 
   @override
   Widget build(BuildContext context) {
-    // final pessoaTeste = new Person(
-    //     'Gabriel', 18, '50009379029', DateTime.now(), 'Pinda', 'SP', 'Brasil');
-    // final pacienteTeste = new Patient(pessoaTeste);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -104,7 +101,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                     ? SizedBox(
                         child: CircularProgressIndicator(
                           value: controller.value,
-                          color: Color(SYSTEMPRIMARYCOLOR),
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                           strokeWidth: 2,
                         ),
                         width: 100,
@@ -132,14 +129,14 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                               children: [
                                 Icon(
                                   Icons.assignment_outlined,
-                                  color: Color(SYSTEMPRIMARYCOLOR),
+                                  color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                                   size: 100,
                                 ),
                                 PaddingWidgetPattern(10),
                                 Text(
                                   "Nenhum exame cadastrado!",
                                   style: TextStyle(
-                                    color: Color(SYSTEMPRIMARYCOLOR),
+                                    color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                                     fontSize: 25,
                                       fontWeight: FontWeight.bold,
                                   ),
@@ -209,7 +206,7 @@ class ExamItem extends StatelessWidget {
           //future.then((examItem) => _examsUpdate(examItem));
         },
       ),
-      color: Color(SYSTEMPRIMARYCOLOR),
+      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
     );
   }
 }

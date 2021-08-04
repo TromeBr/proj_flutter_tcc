@@ -7,7 +7,7 @@ import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -100,7 +100,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                         onTap: () => _selectDate(context),
                         child: Icon(
                           Icons.calendar_today,
-                          color: Color(SYSTEMPRIMARYCOLOR),
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                         ))),
               ),
             ),
@@ -120,7 +120,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: imageFile == null && filePath == null
-                          ? Color(SYSTEMPRIMARYCOLOR)
+                          ? Color(Constants.SYSTEM_PRIMARY_COLOR)
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
@@ -148,7 +148,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: imageFile == null && filePath == null
-                          ? Color(SYSTEMPRIMARYCOLOR)
+                          ? Color(Constants.SYSTEM_PRIMARY_COLOR)
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
@@ -213,7 +213,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                                 ),
                                 FloatingActionButton(
                                   child: Icon(Icons.close_sharp),
-                                  backgroundColor: Color(SYSTEMPRIMARYCOLOR),
+                                  backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
                                   foregroundColor: Colors.white,
                                   mini: true,
                                   tooltip: 'Deletar ' +
@@ -240,7 +240,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
               child: OutlinedButton(
                 child: Text('Cadastrar', style: TextStyle(color: Colors.white)),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: Color(SYSTEMPRIMARYCOLOR),
+                  backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   side: BorderSide(
@@ -318,7 +318,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   Image getTypedImage(File fileImage, String fileExtension) {
     if (fileExtension == 'pdf') {
       return Image.asset(
-        GENERICPDFPATH,
+        Constants.GENERIC_PDF_PATH,
         alignment: Alignment.center,
         width: 75,
         height: 75,

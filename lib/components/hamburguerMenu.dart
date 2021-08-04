@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/screens/login/login.dart';
 
 class HamburguerMenu extends StatelessWidget {
@@ -13,7 +13,7 @@ class HamburguerMenu extends StatelessWidget {
         children: <Widget>[
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
-              color: Color(SYSTEMPRIMARYCOLOR),
+              color: Color(Constants.SYSTEM_PRIMARY_COLOR),
             ),
             arrowColor: Colors.white,
             accountName: Text('User Test'),
@@ -22,7 +22,7 @@ class HamburguerMenu extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.person,
-                color: Color(SYSTEMPRIMARYCOLOR),
+                color: Color(Constants.SYSTEM_PRIMARY_COLOR),
               ),
             ),
             onDetailsPressed: () {},

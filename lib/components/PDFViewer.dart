@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path/path.dart' as fileExtension;
-import 'package:proj_flutter_tcc/models/consts.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 
 class PDFViewer extends StatefulWidget {
   final File exam;
@@ -29,7 +29,7 @@ class _PDFViewerState extends State<PDFViewer> {
           fileExtension.basenameWithoutExtension(widget.exam.path),
           style: TextStyle(
             color: Color(
-              SYSTEMPRIMARYCOLOR,
+              Constants.SYSTEM_PRIMARY_COLOR,
             ),
           ),
           overflow: TextOverflow.ellipsis,
@@ -40,7 +40,7 @@ class _PDFViewerState extends State<PDFViewer> {
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: Color(SYSTEMPRIMARYCOLOR),
+                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                     ),
                   ),
                 ),
@@ -61,7 +61,7 @@ class _PDFViewerState extends State<PDFViewer> {
               ]
             : null,
         iconTheme: IconThemeData(
-          color: Color(SYSTEMPRIMARYCOLOR),
+          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
