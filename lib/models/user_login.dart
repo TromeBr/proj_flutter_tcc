@@ -7,10 +7,12 @@ class UserContext {
   DateTime birthDate;
   String sex;
   String CPF;
+
   String token;
 
 
   UserContext(this.CPF, {this.password, this.surname, this.name, this.email, this.birthDate, this.sex});
+
 
   UserContext.fromJson(Map<String, dynamic> json)
       : name = json['nome'],

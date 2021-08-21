@@ -8,10 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<List<MedExam>> getExamesByCpf() async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     String result = prefs?.getString("userContext");
     Map<String,dynamic> decoded = jsonDecode(result);
     print(UserContext.fromJson(decoded).token);
-
+    
     final response = await http.get(
         Uri.parse(
             'https://orchestrator-medikeep.herokuapp.com/exams/patient/' + UserContext.fromJson(decoded).CPF),
