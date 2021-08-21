@@ -1,13 +1,13 @@
 
 class UserContext {
-  final String name;
+  String name;
   String password;
   String surname;
   String email;
   DateTime birthDate;
   String sex;
   String CPF;
-  String statusCode;
+  String token;
 
 
   UserContext(this.CPF, {this.password, this.surname, this.name, this.email, this.birthDate, this.sex});
@@ -19,9 +19,19 @@ class UserContext {
         CPF = json['cpf'],
         birthDate = json['birthDate'],
         sex = json['sexo'],
-        statusCode = json['statusCode'];
+        token = json['token'];
 
-
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['email']  = this.email;
+    data['surname'] = this.surname;
+    data['CPF'] = this.CPF;
+    data['birthDate'] = this.birthDate;
+    data['sex'] = this.sex;
+    data['token'] = this.token;
+    return data;
+  }
 
   @override
   String toString() {

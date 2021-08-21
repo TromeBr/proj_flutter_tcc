@@ -24,7 +24,7 @@ Future<UserContext> login(String CPF, String password) async {
     //mapResponse['dataNasc']
     if (response.statusCode == 200) {
       user = UserContext.fromJson(mapResponse);
-      prefs.setString("userCPF", mapResponse["cpf"]);
+      prefs.setString("userContext", response.body);
     }
     else{
       user = null;
@@ -56,8 +56,9 @@ Future<UserContext> userSignUp(UserContext user) async {
 
     Map mapResponse = json.decode(body);
     if (response.statusCode == 200) {
+      user = UserContext.fromJson(mapResponse);
+      prefs.setString("userContext", response.body);
       userReturn = user;
-      prefs.setString("userCPF", mapResponse["cpf"]);
     }
     else{
       userReturn = null;
