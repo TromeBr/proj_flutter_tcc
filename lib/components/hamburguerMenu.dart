@@ -5,6 +5,7 @@ import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/login/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class HamburguerMenu extends StatefulWidget {
@@ -79,7 +80,7 @@ class HamburguerMenuState extends State<HamburguerMenu> {
             title: Text('Sair'),
             onTap: ()  {
               //Navigator.pop(context);
-              logoff(context);
+              logout(context);
             },
           ),
         ],
@@ -89,15 +90,14 @@ class HamburguerMenuState extends State<HamburguerMenu> {
 
   HamburguerMenuState();
 
-  void logoff(BuildContext context){
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return LoginScreen();
-        },
-      ),
-    );
+  Future<void> logout(BuildContext context) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(prefs.getString('userContext'));
+      prefs.remove('userContext');
+      print(prefs.getString('userContext'));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
+
   }
   Future<String> getUser(BuildContext context) async {
     var _user = await initializePreference();
