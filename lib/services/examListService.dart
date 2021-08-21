@@ -2,18 +2,24 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:proj_flutter_tcc/models/medExam.dart';
+import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List<MedExam>> getExamesByCpf() async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String cpf = (prefs.getString("cpf") ?? "");
+
+    String result = prefs?.getString("userContext");
+    Map<String,dynamic> decoded = jsonDecode(result);
+    print(UserContext.fromJson(decoded).token);
+    
     final response = await http.get(
         Uri.parse(
-            'https://orchestrator-medikeep.herokuapp.com/exams/patient/' + cpf),
+            'https://orchestrator-medikeep.herokuapp.com/exams/patient/' + UserContext.fromJson(decoded).CPF),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': '*',
+          'Authorization' : 'Bearer ${UserContext.fromJson(decoded).token}'
         });
 
     List<MedExam> medExams = [];

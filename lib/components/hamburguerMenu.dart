@@ -1,8 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
+import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/login/login.dart';
 
-class HamburguerMenu extends StatelessWidget {
+
+class HamburguerMenu extends StatefulWidget {
+  
+  HamburguerMenuState state;
+
+  @override
+  State<StatefulWidget> createState() {
+    var state = HamburguerMenuState();
+    this.state = state;
+    return state;
+  }
+}
+
+class HamburguerMenuState extends State<HamburguerMenu> {
+  String name = 'Nome Teste';
+  String email = 'Email Teste';
+  @override
+  void initState() {
+    super.initState();
+    getUser(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -16,8 +40,8 @@ class HamburguerMenu extends StatelessWidget {
               color: Color(Constants.SYSTEM_PRIMARY_COLOR),
             ),
             arrowColor: Colors.white,
-            accountName: Text('User Test'),
-            accountEmail: Text('usertest@test.com'),
+            accountName: Text(name),
+            accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(
@@ -63,7 +87,7 @@ class HamburguerMenu extends StatelessWidget {
     );
   }
 
-  HamburguerMenu();
+  HamburguerMenuState();
 
   void logoff(BuildContext context){
     Navigator.push(
@@ -74,5 +98,15 @@ class HamburguerMenu extends StatelessWidget {
         },
       ),
     );
+  }
+  Future<String> getUser(BuildContext context) async {
+    var _user = await initializePreference();
+    if(_user != null) {
+      Map<String,dynamic> decoded = jsonDecode(_user);
+      setState(() {
+        this.name = UserContext.fromJson(decoded).name;
+        this.email = UserContext.fromJson(decoded).email;
+      });
+    }
   }
 }
