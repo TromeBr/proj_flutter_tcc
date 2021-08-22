@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:proj_flutter_tcc/components/alertBox.dart';
 import 'package:proj_flutter_tcc/components/appException.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,7 +56,18 @@ Future<UserContext> userSignUp(UserContext user) async {
     );
 
     Map mapResponse = json.decode(body);
-    if (response.statusCode == 200) {
+    if(response.statusCode == 400)
+    {
+      var values = jsonDecode(response.body)['errors'];
+      var field = UserConsist(values);
+      if(field != -1){
+        Map<String, int> mapError = {'message': field};
+        var userMessage = UserContext.fromJson(mapError);
+        return userMessage;
+      }
+    }
+    if (response.statusCode == 200)
+    {
       user = UserContext.fromJson(mapResponse);
       prefs.setString("userContext", response.body);
       userReturn = user;
@@ -65,6 +77,6 @@ Future<UserContext> userSignUp(UserContext user) async {
     }
     return userReturn;
   } on Exception catch (error) {
-    throw Exception('Erro: $error');
+    throw new Exception(error.toString());
   }
 }

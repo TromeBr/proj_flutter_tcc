@@ -139,7 +139,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       if(_finalUser != null) {
           return goToMedConsultScreenTest(context);
         } else {
-           alert(context,"Login", "Login Inválido");
+           alert("Login", "Login Inválido", context: context);
            _loginCPF.text = '';
            _loginPassword.text = '';
       }

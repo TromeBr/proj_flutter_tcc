@@ -32,10 +32,13 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
     DateTime now = DateTime.now().add(Duration(hours: -3));
     _registerBirthDate.text = DateFormat('dd/MM/yyyy').format(now).toString();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPattern(titleScreen: Constants.REGISTRATION_TITLE_SCREEN,),
+      appBar: AppBarPattern(
+        titleScreen: Constants.REGISTRATION_TITLE_SCREEN,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -90,28 +93,32 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
               height: 50.0,
               width: 300.0,
               child: OutlinedButton(
-                child: Text(
-                  Constants.RECORD_USER_BUTTON_TEXT,
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: OutlinedButton.styleFrom(
-                  backgroundColor:_matchingPasswords ? Color(Constants.SYSTEM_PRIMARY_COLOR) : Colors.grey,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  side: BorderSide(
-                    width: 2,
-                    color: Colors.black26,
-                    style: BorderStyle.solid,
+                  child: Text(
+                    Constants.RECORD_USER_BUTTON_TEXT,
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-                onPressed: _matchingPasswords ? () => signUpUser(context) : null
-              ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: _matchingPasswords
+                        ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                        : Colors.grey,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    side: BorderSide(
+                      width: 2,
+                      color: Colors.black26,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  onPressed:
+                      _matchingPasswords ? () => signUpUser(context) : null),
             ),
+            PaddingWidgetPattern(15.0),
           ],
         ),
       ),
     );
   }
+
   Widget goToMedConsultScreenTest(BuildContext context) {
     final Future<UserContext> future = Navigator.push(
       context,
@@ -124,40 +131,50 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
   }
 
   Future<Widget> signUpUser(BuildContext context) async {
-    try{
+    try {
       final DateTime date = DateTime.parse(_registerBirthDate.text != ''
           ? _registerBirthDate.text.split('/').reversed.join('')
           : '1900/01/01');
-      UserContext _user = new UserContext(_registerCPF.text, password: _registerPassword.text, sex: 'M', name: _registerFirstName.text,surname: _registerSurname.text,
-          birthDate: date, email: _registerEmail.text);
+      UserContext _user = new UserContext(_registerCPF.text,
+          password: _registerPassword.text,
+          sex: 'M',
+          name: _registerFirstName.text,
+          surname: _registerSurname.text,
+          birthDate: date,
+          email: _registerEmail.text);
       var _userCreation = await loginService.userSignUp(_user);
-      if(_userCreation != null) {
+      if (_userCreation != null && _userCreation.message.isNaN) {
         return goToMedConsultScreenTest(context);
+      } else if (!_userCreation.message.isNaN) {
+         var errorMessage = ErrorVerify(_userCreation.message);
+         return alert("Registro de usuário", errorMessage, context: context);
       } else {
         Navigator.pop(context);
-        Navigator.of(context)
-            .push(new MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
-        alert(context,"Registro de usuário", "Não foi possível criar o usuário");
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (context) => UserRegistrationScreen()));
+        alert("Registro de usuário", "Não foi possível criar o usuário",
+            context: context);
       }
+    } on Exception catch (error) {
+      return alert('Registro de usuário', error.toString(), context: context);
     }
-    on Exception catch (error) {
-      return alert(context, 'Registro de usuário', error.toString());
-    }
-
   }
+
   _selectDate(BuildContext context) async {
     return showDatePicker(
-        context: context,
-        initialDate: DateTime.now().add(Duration(hours: -3)),
-        firstDate: DateTime(1900),
-        lastDate: DateTime.utc(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day))
+            context: context,
+            initialDate: DateTime.now().add(Duration(hours: -3)),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.utc(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day))
         .then((date) {
       setState(() {
-        _registerBirthDate.text = DateFormat('dd/MM/yyyy').format(date).toString();
+        _registerBirthDate.text =
+            DateFormat('dd/MM/yyyy').format(date).toString();
       });
     });
   }
+
   void MatchingPasswords(String _) {
     if (_registerPassword.text == _registerPasswordAgain.text) {
       setState(() {
@@ -168,5 +185,33 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
         _matchingPasswords = false;
       });
     }
+  }
+
+  String ErrorVerify(int error) {
+    String errorMessage;
+    switch (error) {
+      case 0:
+        errorMessage = Constants.NAME_ERROR;
+        break;
+      case 1:
+        errorMessage = Constants.SURNAME_ERROR;
+        break;
+      case 2:
+        errorMessage = Constants.EMAIL_ERROR;
+        break;
+      case 3:
+        errorMessage = Constants.CPF_ERROR;
+        break;
+      case 4:
+        errorMessage = Constants.DATE_ERROR;
+        break;
+      case 5:
+        errorMessage = Constants.PASSWORD_ERROR;
+        break;
+      default:
+        errorMessage = 'Não foi possível cadastrar o usuário no momento';
+        break;
+    }
+    return errorMessage;
   }
 }

@@ -7,7 +7,7 @@ class UserContext {
   DateTime birthDate;
   String sex;
   String CPF;
-
+  int message;
   String token;
 
 
@@ -21,7 +21,8 @@ class UserContext {
         CPF = json['cpf'],
         birthDate = json['birthDate'],
         sex = json['sexo'],
-        token = json['token'];
+        token = json['token'],
+        message = json['message'];
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -32,6 +33,7 @@ class UserContext {
     data['birthDate'] = this.birthDate;
     data['sex'] = this.sex;
     data['token'] = this.token;
+    data['message'] = this.message;
     return data;
   }
 

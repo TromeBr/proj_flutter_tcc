@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-alert(BuildContext context,String page, String msg){
+alert(String page, String msg, {BuildContext context}){
   showDialog(
     context: context,
     builder: (context) {
