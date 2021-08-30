@@ -394,7 +394,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   _selectDate(BuildContext context) async {
     return showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
+            initialDate: DateTime.now().add(Duration(hours: -3)),
             firstDate: DateTime(1900),
             lastDate: DateTime.utc(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day))
