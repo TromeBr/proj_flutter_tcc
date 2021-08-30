@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proj_flutter_tcc/components/alertBox.dart';
+import 'package:proj_flutter_tcc/components/validators.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/components/textBox.dart';
@@ -23,10 +24,10 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
   final TextEditingController _registerCPF = TextEditingController();
   final TextEditingController _registerFirstName = TextEditingController();
   final TextEditingController _registerSurname = TextEditingController();
-  final TextEditingController _registerSex = TextEditingController();
   final TextEditingController _registerBirthDate = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   bool _matchingPasswords = false;
+  String _value = 'M';
 
   void initState() {
     DateTime now = DateTime.now().add(Duration(hours: -3));
@@ -47,6 +48,49 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
             TextBoxStandard(
               nameLabel: Constants.SURNAME_LABEL_TEXT,
               controller: _registerSurname,
+            ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),),
+            Container(
+                margin: EdgeInsets.only(top: 10.0, left: 10.0),
+                width: double.infinity,
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  Text('Sexo:', style: TextStyle(fontSize: 24),),
+                  Padding(padding: EdgeInsets.only(left: 10.0)),
+                  DropdownButton<String>(
+                    style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.black
+                    ),
+                    iconSize: 24,
+                    elevation: 16,
+                    hint: Text("Sexo"),
+                    value: _value,
+                    autofocus: true,
+                    items: <DropdownMenuItem<String>>[
+                      new DropdownMenuItem(
+                        child: new Text('Masculino'),
+                        value: 'M',
+                      ),
+                      new DropdownMenuItem(
+                        child: new Text('Feminino'),
+                        value: 'F',
+                      ),
+                      new DropdownMenuItem(
+                        child: new Text('Outro'),
+                        value: 'U',
+                      ),
+                    ],
+                    onChanged: (String val) {
+                      setState(() {
+                        _value = val;
+                      });
+                    },
+                  ),
+                ],
+              )
             ),
             TextBoxStandard(
               nameLabel: Constants.EMAIL_LABEL_TEXT,
@@ -107,6 +151,7 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
                 onPressed: _matchingPasswords ? () => signUpUser(context) : null
               ),
             ),
+            PaddingWidgetPattern(20.0),
           ],
         ),
       ),
@@ -128,20 +173,22 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
       final DateTime date = DateTime.parse(_registerBirthDate.text != ''
           ? _registerBirthDate.text.split('/').reversed.join('')
           : '1900/01/01');
-      UserContext _user = new UserContext(_registerCPF.text, password: _registerPassword.text, sex: 'M', name: _registerFirstName.text,surname: _registerSurname.text,
+      var errors = _userConsist();
+      if(errors.isNotEmpty){
+        errorReturn(context, errorsList: errors);
+        throw new Exception(errors);
+      }
+      UserContext _user = new UserContext(_registerCPF.text, password: _registerPassword.text, sex: _value, name: _registerFirstName.text,surname: _registerSurname.text,
           birthDate: date, email: _registerEmail.text);
       var _userCreation = await loginService.userSignUp(_user);
       if(_userCreation != null) {
         return goToMedConsultScreenTest(context);
       } else {
-        Navigator.pop(context);
-        Navigator.of(context)
-            .push(new MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
-        alert(context,"Registro de usuário", "Não foi possível criar o usuário");
+        errorReturn(context, errorMessage: 'Não foi possível criar o usuário');
       }
     }
     on Exception catch (error) {
-      return alert(context, 'Registro de usuário', error.toString());
+      throw new Exception(error.toString());
     }
 
   }
@@ -169,4 +216,35 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
       });
     }
   }
+
+  List<String> _userConsist() {
+    List<String> errors = [];
+    if(_registerFirstName.text.isEmpty){
+      errors.add('O primeiro nome não foi fornecido');
+    }
+    if(_registerSurname.text.isEmpty){
+      errors.add('O sobrenome nome não foi fornecido');
+    }
+    if(_registerBirthDate.text == DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(hours: -3))).toString()){
+      errors.add('Uma data de nascimento válida não foi fornecida');
+    }
+    if(validateEmail(_registerEmail.text)){
+      errors.add('Um E-mail válido não foi fornecido');
+    }
+    if(validateCPF(_registerCPF.text)){
+      errors.add('Um CPF válido não foi fornecido');
+    }
+    if(validatePassword(_registerPassword.text)){
+      errors.add('A senha não atende aos critérios de segurança');
+    }
+    return errors;
+  }
+
+  void errorReturn(BuildContext context, {String errorMessage, List<String> errorsList} ){
+    Navigator.pop(context);
+    Navigator.of(context)
+        .push(new MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
+    alert(context,"Registro de usuário", msg: errorMessage, msgList: errorsList );
+  }
+
 }

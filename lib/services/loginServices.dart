@@ -25,6 +25,7 @@ Future<UserContext> login(String CPF, String password) async {
     if (response.statusCode == 200) {
       user = UserContext.fromJson(mapResponse);
       prefs.setString("userContext", response.body);
+      prefs.setBool("firstTime", false);
     }
     else{
       user = null;
@@ -58,6 +59,7 @@ Future<UserContext> userSignUp(UserContext user) async {
     if (response.statusCode == 200) {
       user = UserContext.fromJson(mapResponse);
       prefs.setString("userContext", response.body);
+      prefs.setBool("firstTime", false);
       userReturn = user;
     }
     else{
