@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:proj_flutter_tcc/models/patient.dart';
 
 class MedExam {
-  //final Patient medExamPatient;
+  final int id;
   final String exam;
-  final File file;
+  File file;
   final Object requestingPhysician;
   final Object reportingPhysician;
   final DateTime date;
 
   MedExam(
-    //this.medExamPatient,
     this.exam,
     this.date, {
+      this.id,
     this.file,
     this.requestingPhysician,
     this.reportingPhysician,
