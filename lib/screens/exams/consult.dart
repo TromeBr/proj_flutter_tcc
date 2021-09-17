@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:full_screen_image/full_screen_image.dart';
@@ -9,10 +11,11 @@ import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 
 class ExamConsultScreen extends StatefulWidget {
   ExamConsultForm state;
-  final MedExam exam;
+  MedExam exam;
 
   ExamConsultScreen(this.exam);
 
@@ -25,21 +28,34 @@ class ExamConsultScreen extends StatefulWidget {
 }
 
 class ExamConsultForm extends State<ExamConsultScreen> {
+  int _id;
   final TextEditingController _registerExam = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
   final TextEditingController _registerLab = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
-  final MedExam exam;
+  MedExam exam;
   PDFViewController PDFController;
   int pages = 0;
   int indexPage = 0;
 
   ExamConsultForm(this.exam) {
+     _id = exam.id;
     _registerExam.text = exam.exam;
     _registerDoc.text = exam.exam;
     _registerLab.text = exam.exam;
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
+  }
+
+  @override
+  Future<void> initState() async {
+    File fileAPI = await fileService.getFile(id: _id);
+    setState(() {
+      if(fileAPI != null){
+        exam.file = fileAPI;
+      }
+    });
+    super.initState();
   }
 
   @override
