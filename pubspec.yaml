@@ -37,6 +37,7 @@ dependencies:
   full_screen_image: ^1.0.2
   flutter_pdfview: ^1.0.4
   shared_preferences: ^2.0.6
+  convert: ^3.0.1
 
 
 dev_dependencies:

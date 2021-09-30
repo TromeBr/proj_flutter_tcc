@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
@@ -9,6 +11,7 @@ import 'package:proj_flutter_tcc/models/patient.dart';
 import 'package:proj_flutter_tcc/models/person.dart';
 import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
+import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 
 import 'register.dart';
 
@@ -101,7 +104,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                     ? SizedBox(
                         child: CircularProgressIndicator(
                           value: controller.value,
-                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                          backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
                           strokeWidth: 2,
                         ),
                         width: 100,
@@ -194,7 +197,13 @@ class ExamItem extends StatelessWidget {
             Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
         subtitle: Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(),
             style: TextStyle(color: Colors.white)),
-        onTap: () {
+        onTap: () async {
+          File fileAPI = await fileService.getFile(id: _exam.fileId, lab: _exam.lab);
+
+          if (fileAPI != null) {
+            _exam.file = fileAPI;
+          }
+          
           Navigator.push(
             context,
             MaterialPageRoute(

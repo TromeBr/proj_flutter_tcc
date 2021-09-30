@@ -12,7 +12,7 @@ Future<UserContext> login(String CPF, String password) async {
     String body = jsonEncode({ "cpf": CPF, "password": password });
     final response = await http.post(
         Uri.parse(
-            'https://auth-medikeep.herokuapp.com/auth/login'),
+            'https://orchestrator-medikeep.herokuapp.com/auth/login'),
         body: body,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',

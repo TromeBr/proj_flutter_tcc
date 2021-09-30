@@ -28,7 +28,7 @@ class ExamConsultScreen extends StatefulWidget {
 }
 
 class ExamConsultForm extends State<ExamConsultScreen> {
-  int _id;
+  String _id;
   final TextEditingController _registerExam = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
   final TextEditingController _registerLab = TextEditingController();
@@ -42,21 +42,21 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   ExamConsultForm(this.exam) {
      _id = exam.id;
     _registerExam.text = exam.exam;
-    _registerDoc.text = exam.exam;
-    _registerLab.text = exam.exam;
+    _registerDoc.text = exam.requestingPhysician["nome"];
+    _registerLab.text = exam.lab;
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 
-  @override
-  Future<void> initState() async {
-    File fileAPI = await fileService.getFile(id: _id);
-    setState(() {
-      if(fileAPI != null){
-        exam.file = fileAPI;
-      }
-    });
-    super.initState();
-  }
+  // @override
+  // Future<void> initState() async {
+  //   File fileAPI = await fileService.getFile(id: _id);
+  //   setState(() {
+  //     if(fileAPI != null){
+  //       exam.file = fileAPI;
+  //     }
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -7,13 +7,13 @@ alert(BuildContext context,String page, {String msg, List<String> msgList}){
     builder: (context) {
       return AlertDialog(
         title: Text(page),
-        content: msgList.isNotEmpty ? SingleChildScrollView(
+        content: (msgList != null && msgList.isNotEmpty) ? SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
               for (var msg in msgList) Text('- ' + msg),
             ],
           ),
-        ) : msg.isNotEmpty ? msg : null,
+        ) : msg.isNotEmpty ? Text(msg) : null,
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
         ],
