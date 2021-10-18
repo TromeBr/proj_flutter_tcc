@@ -1,16 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:convert/convert.dart';
+import 'package:mime/mime.dart';
+import 'package:collection/collection.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 
 Future<File> getFile({String id = '', String lab}) async {
   try {
+    var nameFile = id + '_' + (lab ?? '');
+    Directory filesDir = Directory((await getApplicationDocumentsDirectory()).path + '/patient/files/');
+    var file = filesDir.listSync().firstWhereOrNull((file) => basename(file.path).split('.')[0] == nameFile);
+    if (file != null) {
+      return file;
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String result = prefs?.getString("userContext");
     Map<String, dynamic> decoded = jsonDecode(result);
@@ -28,10 +36,11 @@ Future<File> getFile({String id = '', String lab}) async {
     final response = await http.get(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
-      Directory filesDir = await getApplicationDocumentsDirectory();
       Map<String, dynamic> fileResponse = jsonDecode(response.body);
       Uint8List bytes = hex.decode(fileResponse['file']);
-      File fileReturn = File(filesDir.path + '/patient/files/' + fileResponse['name']);
+      final mime = lookupMimeType('', headerBytes: bytes);
+      File fileReturn =
+          File(filesDir.path + nameFile + '.' + mime.split('/')[1]);
       if (!fileReturn.existsSync()) {
         fileReturn.createSync(recursive: true);
         fileReturn.writeAsBytesSync(bytes);
@@ -42,7 +51,11 @@ Future<File> getFile({String id = '', String lab}) async {
       return null;
     }
     return null;
-  } on Exception catch (error) {
+  }
+  on StateError catch(error){
+    throw new StateError(error.toString());
+  }
+  on Exception catch (error) {
     throw new Exception(error.toString());
   }
 }

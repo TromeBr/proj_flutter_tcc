@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'models/constants.dart' as Constants;
+import 'screens/exams/consultList.dart';
 import 'screens/login/login.dart';
 
 void main() => runApp(TCCApp());
@@ -26,6 +27,9 @@ class TCCApp extends StatelessWidget {
           thumbColor: MaterialStateProperty.all(Colors.white),
         ),
       ),
+      routes: {
+        '/consultList': (context) => MedExamConsultScreen(),
+      },
     );
   }
 }

@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:proj_flutter_tcc/models/patient.dart';
 
 class MedExam {
-  final String id;
+  String id;
   final String lab;
   final String exam;
-  final String fileId;
+  String fileId;
   File file;
   final Map requestingPhysician;
   final Map reportingPhysician;

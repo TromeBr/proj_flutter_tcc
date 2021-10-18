@@ -12,6 +12,9 @@ import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
+import 'package:proj_flutter_tcc/services/examService.dart' as examService;
+
+import 'consultList.dart';
 
 class ExamConsultScreen extends StatefulWidget {
   ExamConsultForm state;
@@ -31,7 +34,6 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   String _id;
   final TextEditingController _registerExam = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
-  final TextEditingController _registerLab = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   MedExam exam;
@@ -40,28 +42,31 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   int indexPage = 0;
 
   ExamConsultForm(this.exam) {
-     _id = exam.id;
+    _id = exam.id;
     _registerExam.text = exam.exam;
-    _registerDoc.text = exam.requestingPhysician["nome"];
-    _registerLab.text = exam.lab;
+    _registerDoc.text = exam.exam;//exam.requestingPhysician["nome"];
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 
-  // @override
-  // Future<void> initState() async {
-  //   File fileAPI = await fileService.getFile(id: _id);
-  //   setState(() {
-  //     if(fileAPI != null){
-  //       exam.file = fileAPI;
-  //     }
-  //   });
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPattern(titleScreen: 'Exame'),
+      appBar: AppBarPattern(
+        titleScreen: 'Exame',
+        actions: this.exam.lab == null ? <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete_outline_sharp),
+            onPressed: () async {
+              var _ExamDelete = await examService.deleteExam(this.exam.id);
+              if(_ExamDelete)
+                _deleteResult("Remoção Concluída", "O exame foi deletado com sucesso", idExam: this.exam.id);
+              else
+                _deleteResult("Erro ao deletar", "Por favor, tente mais tarde");
+            },
+          ),
+        ] : null,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -73,11 +78,6 @@ class ExamConsultForm extends State<ExamConsultScreen> {
             TextBoxStandard(
               nameLabel: 'Médico Solicitante',
               controller: _registerDoc,
-              readOnly: true,
-            ),
-            TextBoxStandard(
-              nameLabel: 'Laboratório',
-              controller: _registerLab,
               readOnly: true,
             ),
             Padding(
@@ -153,6 +153,26 @@ class ExamConsultForm extends State<ExamConsultScreen> {
           ],
         ),
       ),
+    );
+  }
+  void _deleteResult(String error, String messageError, {String idExam}) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(error),
+          content: Text(messageError),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).restorablePopAndPushNamed('/consultList');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -31,7 +31,7 @@ Future<List<MedExam>> getExamesByCpf() async {
             id: exam['id'],
             fileId: exam['file'],
             lab: exam['lab'],
-            requestingPhysician: exam['requestingPhysician'], reportingPhysician: exam['reportingPhysician']));
+            /*requestingPhysician: exam['requestingPhysician'],*/ reportingPhysician: exam['reportingPhysician']));
       });
     }
     if (response.statusCode == 406) {

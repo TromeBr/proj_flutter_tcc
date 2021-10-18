@@ -11,6 +11,7 @@ import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:proj_flutter_tcc/services/examService.dart' as examService;
 
 class ExamRegisterScreen extends StatefulWidget {
   ExamRegisterForm state;
@@ -26,7 +27,6 @@ class ExamRegisterScreen extends StatefulWidget {
 class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerExam = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
-  final TextEditingController _registerLab = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
 
@@ -82,10 +82,6 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             TextBoxStandard(
               nameLabel: 'Médico Solicitante',
               controller: _registerDoc,
-            ),
-            TextBoxStandard(
-              nameLabel: 'Laboratório',
-              controller: _registerLab,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -333,11 +329,10 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     }
   }
 
-  Widget _CreateExam(BuildContext context) {
+  Future<Widget> _CreateExam(BuildContext context) async {
     List<String> _camposAlert = [];
     final String exam = _registerExam.text;
     final String doctorName = _registerDoc.text;
-    final String labName = _registerLab.text;
     final DateTime date = DateTime.parse(_registerData.text != ''
         ? _registerData.text.split('/').reversed.join('')
         : '1900/01/01');
@@ -353,20 +348,43 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     if (doctorName.isEmpty) {
       _camposAlert.add('Médico Solicitante');
     }
-    if (labName.isEmpty) {
-      _camposAlert.add('Laboratório');
-    }
     if (DateFormat('yyyy-MM-dd').format(date).toString() == '1900-01-01') {
       _camposAlert.add('Data');
     }
 
     if (_camposAlert.isEmpty) {
-      final createdExam = MedExam(exam, date, file: fileRegister);
-      Navigator.pop(context, createdExam);
+      //Map<String, dynamic> doctorAttribute = {'nome': doctorName,'crm': 54654655};
+      MedExam createdExam = MedExam(exam, date, file: fileRegister, /*requestingPhysician: doctorAttribute*/);
+      var ExamInsert = await examService.insertExam(createdExam);
+      if(ExamInsert != null){
+        createdExam.id = ExamInsert;
+        createdExam.fileId = ExamInsert;
+        Navigator.pop(context, createdExam);
+      }
+      else{
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Erro ao inserir o exame'),
+              content: const Text('Tente novamente mais tarde'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     } else {
       showDialog<void>(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Campo não Preenchido'),

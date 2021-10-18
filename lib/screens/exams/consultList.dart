@@ -16,7 +16,8 @@ import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 import 'register.dart';
 
 class MedExamConsultScreen extends StatefulWidget {
-  final List<MedExam> _medExamList = <MedExam>[];
+   List<MedExam> _medExamList = <MedExam>[];
+
 
   @override
   State<StatefulWidget> createState() {
@@ -31,6 +32,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
   Future<List<MedExam>> exams = examService.getExamesByCpf();
   AnimationController controller;
   bool _showCircle;
+
 
   @override
   void initState() {
@@ -104,7 +106,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                     ? SizedBox(
                         child: CircularProgressIndicator(
                           value: controller.value,
-                          backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                           strokeWidth: 2,
                         ),
                         width: 100,
@@ -176,6 +178,14 @@ class MedExamConsultState extends State<MedExamConsultScreen>
       });
     }
   }
+  void _examsDelete(String idExam) {
+     if (idExam != null) {
+       var index = widget._medExamList.indexWhere((exam) => exam.id == idExam);
+       setState(() {
+         widget._medExamList.removeAt(index);
+       });
+     }
+   }
 }
 
 class ExamItem extends StatelessWidget {
@@ -187,10 +197,7 @@ class ExamItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(
-          _exam.exam == 'Sangue' || _exam.exam == 'Pézinho'
-              ? Icons.accessibility_new_sharp
-              : Icons.assignment_turned_in_sharp,
+        leading: Icon(Icons.assignment_turned_in_sharp,
           color: Colors.white,
         ),
         title:
@@ -200,10 +207,10 @@ class ExamItem extends StatelessWidget {
         onTap: () async {
           File fileAPI = await fileService.getFile(id: _exam.fileId, lab: _exam.lab);
 
-          if (fileAPI != null) {
-            _exam.file = fileAPI;
-          }
-          
+           if (fileAPI != null) {
+             _exam.file = fileAPI;
+           }
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -212,10 +219,11 @@ class ExamItem extends StatelessWidget {
               },
             ),
           );
-          //future.then((examItem) => _examsUpdate(examItem));
         },
       ),
       color: Color(Constants.SYSTEM_PRIMARY_COLOR),
     );
   }
+
+
 }

@@ -126,7 +126,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return MedExamConsultScreen();
+          return new MedExamConsultScreen();
         },
       ),
     );
