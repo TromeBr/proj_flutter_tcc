@@ -178,14 +178,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
       });
     }
   }
-  void _examsDelete(String idExam) {
-     if (idExam != null) {
-       var index = widget._medExamList.indexWhere((exam) => exam.id == idExam);
-       setState(() {
-         widget._medExamList.removeAt(index);
-       });
-     }
-   }
 }
 
 class ExamItem extends StatelessWidget {
