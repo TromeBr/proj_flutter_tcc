@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt_io.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:encrypt/encrypt_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/appException.dart';
@@ -10,23 +14,38 @@ Future<UserContext> login(String CPF, String password) async {
   try {
     UserContext user;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String body = jsonEncode({"cpf": CPF, "password": password});
-    final response = await http.post(
-      Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/login'),
-      body: body,
+
+    final responseKey = await http.get(
+      Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/key'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*'
       },
     );
-    Map mapResponse = json.decode(response.body);
-    //mapResponse['dataNasc']
-    if (response.statusCode == 200) {
-      user = UserContext.fromJson(mapResponse);
-      prefs.setString("userContext", response.body);
-      prefs.setBool("firstTime", false);
-    } else {
-      user = null;
+
+    if(responseKey.statusCode == 200){
+      Map mapResponseKey = json.decode(responseKey.body);
+      final publicKey = RSAKeyParser().parse(mapResponseKey['publicKey']) as RSAPublicKey;
+      final encrypter = Encrypter(RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1 ));
+      final passwordEncrypt = encrypter.encrypt(password);
+      String body = jsonEncode({"cpf": CPF, "password": passwordEncrypt.base64.toString()});
+      final response = await http.post(
+        Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/login'),
+        body: body,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Access-Control-Allow-Origin': '*'
+        },
+      );
+      Map mapResponse = json.decode(response.body);
+      //mapResponse['dataNasc']
+      if (response.statusCode == 200) {
+        user = UserContext.fromJson(mapResponse);
+        prefs.setString("userContext", response.body);
+        prefs.setBool("firstTime", false);
+      } else {
+        user = null;
+      }
     }
     return user;
   } on Exception catch (error) {
@@ -36,31 +55,48 @@ Future<UserContext> login(String CPF, String password) async {
 
 Future<void> userSignUp(UserContext user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String body = jsonEncode({
-    'name': '${user.name}',
-    'surname': '${user.surname}',
-    'cpf': '${user.CPF}',
-    'sex': '${user.sex}',
-    'email': '${user.email}',
-    'birthDate': '${DateFormat('yyyy-MM-dd').format(user.birthDate)}',
-    'password': '${user.password}'
-  });
-  print(body);
-  final response = await http.post(
-    Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/signup'),
-    body: body,
+
+  final responseKey = await http.get(
+    Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/key'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Access-Control-Allow-Origin': '*'
     },
   );
+  if(responseKey.statusCode == 200){
+    Map mapResponseKey = json.decode(responseKey.body);
+    final publicKey = RSAKeyParser().parse(mapResponseKey['publicKey']) as RSAPublicKey;
+    final encrypter = Encrypter(RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1 ));
+    final passwordEncrypt = encrypter.encrypt(user.password);
+    String body = jsonEncode({
+      'name': '${user.name}',
+      'surname': '${user.surname}',
+      'cpf': '${user.CPF}',
+      'sex': '${user.sex}',
+      'email': '${user.email}',
+      'birthDate': '${DateFormat('yyyy-MM-dd').format(user.birthDate)}',
+      'password': '${passwordEncrypt.base64.toString()}'
+    });
+    final response = await http.post(
+      Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/signup'),
+      body: body,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*'
+      },
+    );
 
-  Map mapResponse = json.decode(body);
-  if (response.statusCode == 200) {
-    mapResponse["token"] = json.decode(response.body)["token"]; 
-    prefs.setString("userContext", jsonEncode(mapResponse).toString());
-    prefs.setBool("firstTime", false);
-  } else {
-    throw new Exception(json.decode(response.body)["errors"]);
+    Map mapResponse = json.decode(body);
+    if (response.statusCode == 200) {
+      mapResponse["token"] = json.decode(response.body)["token"];
+      prefs.setString("userContext", jsonEncode(mapResponse).toString());
+      prefs.setBool("firstTime", false);
+    } else {
+      throw new Exception(json.decode(response.body)["errors"]);
+    }
   }
+  else{
+    throw new Exception('Falha na obtenção de chave publica');
+  }
+
 }

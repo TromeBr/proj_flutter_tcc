@@ -11,7 +11,6 @@ Future<List<MedExam>> getExamesByCpf() async {
 
     String result = prefs?.getString("userContext");
     Map<String,dynamic> decoded = jsonDecode(result);
-    print(UserContext.fromJson(decoded).token);
     
     final response = await http.get(
         Uri.parse(
