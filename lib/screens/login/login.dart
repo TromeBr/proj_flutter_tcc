@@ -143,6 +143,9 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
            alert(context,"Login", msg: "Login Inválido");
            _loginCPF.text = '';
            _loginPassword.text = '';
+           setState(() {
+             _loginButtonVerify = false;
+           });
       }
   }
 

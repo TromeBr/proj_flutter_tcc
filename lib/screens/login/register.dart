@@ -184,17 +184,18 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
       var errors = _userConsist();
       if (errors.isNotEmpty) {
         errorReturn(context, errorsList: errors);
-        throw new Exception(errors);
       }
-      UserContext _user = new UserContext(_registerCPF.text,
-          password: _registerPassword.text,
-          sex: _value,
-          name: _registerFirstName.text,
-          surname: _registerSurname.text,
-          birthDate: date,
-          email: _registerEmail.text);
-      var _userCreation = await loginService.userSignUp(_user);
-      return goToMedConsultScreenTest(context);
+      else{
+        UserContext _user = new UserContext(_registerCPF.text,
+            password: _registerPassword.text,
+            sex: _value,
+            name: _registerFirstName.text,
+            surname: _registerSurname.text,
+            birthDate: date,
+            email: _registerEmail.text);
+        var _userCreation = await loginService.userSignUp(_user);
+        return goToMedConsultScreenTest(context);
+      }
     } catch (error) {
       errorReturn(context, errorMessage: error.message[0]);
     }

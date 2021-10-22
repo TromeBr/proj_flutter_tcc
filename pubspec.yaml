@@ -40,6 +40,7 @@ dependencies:
   convert: ^3.0.1
   mime: ^1.0.0
   hex: ^0.2.0
+  encrypt: ^5.0.1
 
 
 dev_dependencies:
