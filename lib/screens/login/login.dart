@@ -42,7 +42,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
             ),
             PaddingWidgetPattern(8.0),
             TextBoxStandard(
-              nameLabel: Constants.EMAIL_LABEL_TEXT,
+              nameLabel: Constants.CPF_LABEL_TEXT,
+              keyboardType: TextInputType.number,
               controller: _loginCPF,
               icon: Icons.account_circle_sharp,
               iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
