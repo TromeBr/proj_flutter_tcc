@@ -15,12 +15,12 @@ class UserContext {
 
 
   UserContext.fromJson(Map<String, dynamic> json)
-      : name = json['nome'],
+      : name = json['name'],
         email = json['email'],
-        surname = json['sobrenome'],
+        surname = json['surname'],
         CPF = json['cpf'],
-        birthDate = json['birthDate'],
-        sex = json['sexo'],
+        birthDate = json['birthDate'] != null ? DateTime.parse(json['birthDate']) : null,
+        sex = json['sex'],
         token = json['token'];
 
   Map<String, dynamic> toJson(){
