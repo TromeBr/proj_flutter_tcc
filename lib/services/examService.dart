@@ -14,13 +14,15 @@ Future<String> insertExam(MedExam exam) async {
     Map<String, dynamic> decoded = jsonDecode(result);
     String fullName = UserContext.fromJson(decoded).name +
         UserContext.fromJson(decoded).surname;
+    String file = exam.file != null ? HEX.encode(await exam.file.readAsBytes()) : '';
 
     String body = jsonEncode({
       "exam": '${exam.exam}',
       "date": '${exam.date}',
       //"requestingPhysician": '${exam.requestingPhysician}',
       "patient": '${UserContext.fromJson(decoded).CPF}',
-      "file": '${ HEX.encode(await exam.file.readAsBytes())}'
+      if(file.isNotEmpty)
+         "file": '$file'
     });
 
     final response = await http.post(

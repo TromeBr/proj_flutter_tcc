@@ -20,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginUpdateWidgetState extends State<LoginScreen> {
-  final TextEditingController _loginEmail = TextEditingController();
   final TextEditingController _loginCPF = TextEditingController();
   final TextEditingController _loginPassword = TextEditingController();
   bool _loginButtonVerify = false;
@@ -31,7 +30,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            PaddingWidgetPattern(32.0),
+            PaddingWidgetPattern(35.0),
             Container(
               child: Image.asset(
                 Constants.LOGO_PATH,
@@ -40,7 +39,19 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                 fit: BoxFit.contain,
               ),
             ),
-            PaddingWidgetPattern(8.0),
+            PaddingWidgetPattern(5.0),
+            Container(
+              child: Text(
+                Constants.MEDIKEEP,
+                style: TextStyle(
+                  fontFamily: 'Syncopate',
+                  color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            //PaddingWidgetPattern(8.0),
             TextBoxStandard(
               nameLabel: Constants.CPF_LABEL_TEXT,
               keyboardType: TextInputType.number,
@@ -80,7 +91,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                onPressed: _loginButtonVerify ? () => signInUser(context): null,
+                onPressed:
+                    _loginButtonVerify ? () => signInUser(context) : null,
               ),
             ),
             PaddingWidgetPattern(8.0),
@@ -137,18 +149,17 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
     String _email = _loginCPF.text;
     String _password = _loginPassword.text;
     var _finalUser = await loginService.login(_email, _password);
-      if(_finalUser != null) {
-          return goToMedConsultScreenTest(context);
-        } else {
-           alert(context,"Login", msg: "Login Inválido");
-           _loginCPF.text = '';
-           _loginPassword.text = '';
-           setState(() {
-             _loginButtonVerify = false;
-           });
-      }
+    if (_finalUser != null) {
+      return goToMedConsultScreenTest(context);
+    } else {
+      alert(context, "Login", msg: "Login Inválido");
+      _loginCPF.text = '';
+      _loginPassword.text = '';
+      setState(() {
+        _loginButtonVerify = false;
+      });
+    }
   }
-
 
   void enableButton(String _) {
     if (_loginCPF.text.isNotEmpty && _loginPassword.text.isNotEmpty) {
