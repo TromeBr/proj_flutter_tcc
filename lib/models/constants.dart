@@ -29,3 +29,4 @@ const RECORD_USER_BUTTON_TEXT = 'Registrar';
 
 //Miscellaneous
 const OR_TYPED = 'Ou';
+const MEDIKEEP = 'MEDIKEEP';

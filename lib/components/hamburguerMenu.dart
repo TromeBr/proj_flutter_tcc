@@ -92,9 +92,8 @@ class HamburguerMenuState extends State<HamburguerMenu> {
 
   Future<void> logout(BuildContext context) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print(prefs.getString('userContext'));
       prefs.remove('userContext');
-      print(prefs.getString('userContext'));
+      prefs.remove('firstTime');
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
 
