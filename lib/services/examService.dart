@@ -12,22 +12,17 @@ Future<String> insertExam(MedExam exam) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String result = prefs?.getString("userContext");
     Map<String, dynamic> decoded = jsonDecode(result);
-    String fullName = UserContext.fromJson(decoded).name +
-        UserContext.fromJson(decoded).surname;
-    String file = exam.file != null ? HEX.encode(await exam.file.readAsBytes()) : '';
 
     String body = jsonEncode({
       "exam": '${exam.exam}',
       "date": '${exam.date}',
       //"requestingPhysician": '${exam.requestingPhysician}',
       "patient": '${UserContext.fromJson(decoded).CPF}',
-      if(file.isNotEmpty)
-         "file": '$file'
+      "file": '${HEX.encode(await exam.file.readAsBytes())}'
     });
 
     final response = await http.post(
-      Uri.parse(
-          'https://orchestrator-medikeep.herokuapp.com/exams'),
+      Uri.parse('https://orchestrator-medikeep.herokuapp.com/exams'),
       body: body,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -38,10 +33,9 @@ Future<String> insertExam(MedExam exam) async {
     Map<String, dynamic> responseAPI = jsonDecode(response.body);
     String resultAPI;
     if (response.statusCode == 200) {
-       resultAPI = responseAPI['id'].toString();
+      resultAPI = responseAPI['id'].toString();
     }
-    if(response.statusCode == 500)
-      throw new Exception(responseAPI["error"]);
+    if (response.statusCode == 500) throw new Exception(responseAPI["error"]);
 
     return resultAPI;
   } on Exception catch (error) {
@@ -56,8 +50,7 @@ Future<bool> deleteExam(String examId) async {
     Map<String, dynamic> decoded = jsonDecode(result);
 
     final response = await http.delete(
-      Uri.parse(
-          'https://orchestrator-medikeep.herokuapp.com/exams/' + examId),
+      Uri.parse('https://orchestrator-medikeep.herokuapp.com/exams/' + examId),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
@@ -69,8 +62,7 @@ Future<bool> deleteExam(String examId) async {
     if (response.statusCode == 200) {
       resultAPI = true;
     }
-    if(response.statusCode == 500)
-      throw new Exception(responseAPI["error"]);
+    if (response.statusCode == 500) throw new Exception(responseAPI["error"]);
 
     return resultAPI;
   } on Exception catch (error) {

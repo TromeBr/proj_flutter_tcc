@@ -351,6 +351,9 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     if (DateFormat('yyyy-MM-dd').format(date).toString() == '1900-01-01') {
       _camposAlert.add('Data');
     }
+    if(fileRegister == null){
+      _camposAlert.add('Arquivo');
+    }
 
     if (_camposAlert.isEmpty) {
       //Map<String, dynamic> doctorAttribute = {'nome': doctorName,'crm': 54654655};
