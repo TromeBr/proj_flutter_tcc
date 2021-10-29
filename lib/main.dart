@@ -11,7 +11,7 @@ class TCCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SpashScreen(),
+      home: SplashScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Color(Constants.SYSTEM_PRIMARY_COLOR),

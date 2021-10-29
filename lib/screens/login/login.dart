@@ -30,16 +30,18 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            PaddingWidgetPattern(35.0),
+            PaddingWidgetPattern(50.0),
             Container(
               child: Image.asset(
-                Constants.LOGO_PATH,
-                height: 120,
-                width: 120,
+                Constants.LOGO_PATH_S1,
+                alignment: Alignment.bottomCenter,
+                color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                height: 200,
+                width: 250,
+
                 fit: BoxFit.contain,
               ),
             ),
-            PaddingWidgetPattern(5.0),
             Container(
               child: Text(
                 Constants.MEDIKEEP,

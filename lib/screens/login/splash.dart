@@ -5,21 +5,21 @@ import 'package:proj_flutter_tcc/screens/exams/consultList.dart';
 import 'login.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 
-class SpashScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return Splash();
   }
 }
 
-class Splash extends State<SpashScreen> {
+class Splash extends State<SplashScreen> {
   Image myImage;
 
   @override
   void initState() {
     super.initState();
     myImage = Image.asset(
-      Constants.LOGO_PATH,
+      Constants.LOGO_PATH_S1,
       height: 300,
       width: 300,
     );
