@@ -19,7 +19,7 @@ class Splash extends State<SplashScreen> {
   void initState() {
     super.initState();
     myImage = Image.asset(
-      Constants.LOGO_PATH_S1,
+      Constants.LOGO_PATH_S1_P,
       height: 300,
       width: 300,
     );

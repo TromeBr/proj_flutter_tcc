@@ -27,16 +27,16 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-return WillPopScope(
+  return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
-              PaddingWidgetPattern(32.0),
+              PaddingWidgetPattern(50.0),
               Container(
                 child: Image.asset(
-                  Constants.LOGO_PATH,
+                  Constants.LOGO_PATH_S1_P,
                   height: 120,
                   width: 120,
                   fit: BoxFit.contain,
@@ -54,49 +54,6 @@ return WillPopScope(
               ),
             ),
             //PaddingWidgetPattern(8.0),
-            TextBoxStandard(
-              nameLabel: Constants.CPF_LABEL_TEXT,
-              keyboardType: TextInputType.number,
-              controller: _loginCPF,
-              icon: Icons.account_circle_sharp,
-              iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
-              onChange: enableButton,
-            ),
-            TextBoxStandard(
-              nameLabel: Constants.PASSWORD_LABEL_TEXT,
-              controller: _loginPassword,
-              icon: Icons.vpn_key_sharp,
-              iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
-              obscureText: true,
-              wordSuggestion: false,
-              autocorrect: false,
-              onChange: enableButton,
-            ),
-            PaddingWidgetPattern(15.0),
-            Container(
-              width: 300.0,
-              height: 50.0,
-              child: OutlinedButton(
-                child: Text(
-                  Constants.LOGIN_BUTTON_TEXT,
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: _loginButtonVerify
-                      ? Color(Constants.SYSTEM_PRIMARY_COLOR)
-                      : Colors.grey,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  side: BorderSide(
-                    width: 2,
-                    color: Colors.black26,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                onPressed:
-                    _loginButtonVerify ? () => signInUser(context) : null,
-              ),
-              PaddingWidgetPattern(8.0),
               TextBoxStandard(
                 nameLabel: Constants.CPF_LABEL_TEXT,
                 keyboardType: TextInputType.number,
@@ -179,6 +136,7 @@ return WillPopScope(
       ),
     );
   }
+
 
   Widget goToMedConsultScreenTest(BuildContext context) {
     final Future<UserContext> future = Navigator.push(
