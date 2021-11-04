@@ -34,9 +34,23 @@ class UserContext {
     data['token'] = this.token;
     return data;
   }
+  @override
+  bool operator ==(other) =>
+    identical(this, other) ||
+    (other is UserContext)
+        && other.name == name
+        && other.surname == surname
+        && other.sex == sex
+        && other.password == password
+        && other.email == email;
 
   @override
   String toString() {
     return 'UserLogin{User: $name, Password: $password}';
   }
+
+  @override
+  int get hashCode => name.hashCode ^ surname.hashCode ^
+  sex.hashCode ^ password.hashCode ^ email.hashCode ;
+
 }

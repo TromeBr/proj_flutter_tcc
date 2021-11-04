@@ -12,8 +12,6 @@ Future<String> insertExam(MedExam exam) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String result = prefs?.getString("userContext");
     Map<String, dynamic> decoded = jsonDecode(result);
-    String fullName = UserContext.fromJson(decoded).name +
-        UserContext.fromJson(decoded).surname;
 
     String body = jsonEncode({
       "exam": '${exam.exam}',

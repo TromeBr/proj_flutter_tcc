@@ -5,6 +5,7 @@ import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/login/login.dart';
+import 'package:proj_flutter_tcc/screens/user/myData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -71,9 +72,17 @@ class HamburguerMenuState extends State<HamburguerMenu> {
             ],
           ),
           ListTile(
-            title: Text('Item 1'),
+            title: Text('Meus dados'),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MyDataScreen();
+                  },
+                ),
+              );
             },
           ),
           ListTile(
