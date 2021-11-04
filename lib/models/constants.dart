@@ -28,6 +28,11 @@ const LOGIN_BUTTON_TEXT = 'Login';
 const RECORD_USER_BUTTON_TEXT = 'Registrar';
 
 
+//User Data
+const DATA_USER_TITLE_SCREEN = 'Dados do usuário';
+const USER_REMOVE = 'Deletar conta';
+
+
 //Miscellaneous
 const OR_TYPED = 'Ou';
 const MEDIKEEP = 'MEDIKEEP';

@@ -255,12 +255,4 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
     return errors;
   }
 
-  void errorReturn(BuildContext context,
-      {String errorMessage, List<String> errorsList}) {
-    // Navigator.pop(context);
-    // Navigator.of(context).push(
-    //     new MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
-    alert(context, "Registro de usuário",
-        msg: errorMessage, msgList: errorsList);
-  }
 }

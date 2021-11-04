@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:proj_flutter_tcc/components/alertBox.dart';
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
@@ -26,21 +27,20 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PaddingWidgetPattern(50.0),
-            Container(
-              child: Image.asset(
-                Constants.LOGO_PATH_S1,
-                alignment: Alignment.bottomCenter,
-                color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                height: 200,
-                width: 250,
-
-                fit: BoxFit.contain,
-              ),
+return WillPopScope(
+      onWillPop: () => SystemNavigator.pop(),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              PaddingWidgetPattern(32.0),
+              Container(
+                child: Image.asset(
+                  Constants.LOGO_PATH,
+                  height: 120,
+                  width: 120,
+                  fit: BoxFit.contain,
+                ),
             ),
             Container(
               child: Text(
@@ -96,20 +96,38 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                 onPressed:
                     _loginButtonVerify ? () => signInUser(context) : null,
               ),
-            ),
-            PaddingWidgetPattern(8.0),
-            Text(Constants.OR_TYPED),
-            PaddingWidgetPattern(8.0),
-            Container(
-              width: 300.0,
-              height: 50.0,
-              child: OutlinedButton(
+              PaddingWidgetPattern(8.0),
+              TextBoxStandard(
+                nameLabel: Constants.CPF_LABEL_TEXT,
+                keyboardType: TextInputType.number,
+                controller: _loginCPF,
+                icon: Icons.account_circle_sharp,
+                iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                onChange: enableButton,
+              ),
+              TextBoxStandard(
+                nameLabel: Constants.PASSWORD_LABEL_TEXT,
+                controller: _loginPassword,
+                icon: Icons.vpn_key_sharp,
+                iconColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                obscureText: true,
+                wordSuggestion: false,
+                autocorrect: false,
+                onChange: enableButton,
+              ),
+              PaddingWidgetPattern(15.0),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                child: OutlinedButton(
                   child: Text(
-                    Constants.USER_REGISTRATION_BUTTON_TEXT,
+                    Constants.LOGIN_BUTTON_TEXT,
                     style: TextStyle(color: Colors.white),
                   ),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                    backgroundColor: _loginButtonVerify
+                        ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                        : Colors.grey,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
                     side: BorderSide(
@@ -118,19 +136,45 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                       style: BorderStyle.solid,
                     ),
                   ),
-                  onPressed: () {
-                    final Future<UserContext> future = Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return UserRegistrationScreen();
-                        },
+                  onPressed:
+                      _loginButtonVerify ? () => signInUser(context) : null,
+                ),
+              ),
+              PaddingWidgetPattern(8.0),
+              Text(Constants.OR_TYPED),
+              PaddingWidgetPattern(8.0),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                child: OutlinedButton(
+                    child: Text(
+                      Constants.USER_REGISTRATION_BUTTON_TEXT,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      side: BorderSide(
+                        width: 2,
+                        color: Colors.black26,
+                        style: BorderStyle.solid,
                       ),
-                    );
-                    future.then((UserContext) {});
-                  }),
-            ),
-          ],
+                    ),
+                    onPressed: () {
+                      final Future<UserContext> future = Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return UserRegistrationScreen();
+                          },
+                        ),
+                      );
+                      future.then((UserContext) {});
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'models/constants.dart' as Constants;
 import 'screens/exams/consultList.dart';
 import 'screens/login/login.dart';
+import 'screens/user/myData.dart';
 import 'screens/login/splash.dart';
 
 void main() => runApp(TCCApp());
@@ -30,6 +31,8 @@ class TCCApp extends StatelessWidget {
       ),
       routes: {
         '/consultList': (context) => MedExamConsultScreen(),
+        '/myData': (context) => MyDataScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }
