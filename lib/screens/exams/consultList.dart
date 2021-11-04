@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
@@ -57,118 +58,121 @@ class MedExamConsultState extends State<MedExamConsultScreen>
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        appBar: AppBarPattern(
-          titleScreen: 'Consulta de Exames',
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                final Future<MedExam> future = Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ExamRegisterScreen();
-                    },
-                  ),
-                );
-                future.then((examItem) => _examsUpdate(examItem));
-              },
-            ),
-          ],
-        ),
-        body: Scaffold(
+    return WillPopScope(
+      onWillPop: () => SystemNavigator.pop(),
+      child: Scaffold(
           resizeToAvoidBottomInset: false,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: width,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            margin: searchMargin,
-                            alignment: Alignment.topCenter,
-                            child: SearchBar(),
+          extendBodyBehindAppBar: true,
+          appBar: AppBarPattern(
+            titleScreen: 'Consulta de Exames',
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  final Future<MedExam> future = Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ExamRegisterScreen();
+                      },
+                    ),
+                  );
+                  future.then((examItem) => _examsUpdate(examItem));
+                },
+              ),
+            ],
+          ),
+          body: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: width,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: searchMargin,
+                              alignment: Alignment.topCenter,
+                              child: SearchBar(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                (_showCircle
-                    ? SizedBox(
-                        child: CircularProgressIndicator(
-                          value: controller.value,
-                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                          strokeWidth: 2,
-                        ),
-                        width: 100,
-                        height: 100,
-                      )
-                    : SizedBox.shrink()),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    width: width,
-                    margin: margin,
-                    child: FutureBuilder<List<MedExam>>(
-                        future: exams,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<MedExam>> snapshot) {
-                          if (snapshot.data != null &&
-                              snapshot.data.length >
-                                  widget._medExamList.length) {
-                            widget._medExamList.addAll(snapshot.data);
-                            _showCircle = false;
-                          } else if ((snapshot.hasError ||
-                              snapshot.data?.length == 0) && widget._medExamList.length == 0) {
-                            _showCircle = false;
-                            return Column(
-                              children: [
-                                Icon(
-                                  Icons.assignment_outlined,
-                                  color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                  size: 100,
-                                ),
-                                PaddingWidgetPattern(10),
-                                Text(
-                                  "Nenhum exame cadastrado!",
-                                  style: TextStyle(
+                  (_showCircle
+                      ? SizedBox(
+                          child: CircularProgressIndicator(
+                            value: controller.value,
+                            color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                            strokeWidth: 2,
+                          ),
+                          width: 100,
+                          height: 100,
+                        )
+                      : SizedBox.shrink()),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      width: width,
+                      margin: margin,
+                      child: FutureBuilder<List<MedExam>>(
+                          future: exams,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<MedExam>> snapshot) {
+                            if (snapshot.data != null &&
+                                snapshot.data.length >
+                                    widget._medExamList.length) {
+                              widget._medExamList.addAll(snapshot.data);
+                              _showCircle = false;
+                            } else if ((snapshot.hasError ||
+                                snapshot.data?.length == 0) && widget._medExamList.length == 0) {
+                              _showCircle = false;
+                              return Column(
+                                children: [
+                                  Icon(
+                                    Icons.assignment_outlined,
                                     color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                    fontSize: 25,
-                                      fontWeight: FontWeight.bold,
+                                    size: 100,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                                  PaddingWidgetPattern(10),
+                                  Text(
+                                    "Nenhum exame cadastrado!",
+                                    style: TextStyle(
+                                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                      fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              );
+                            }
+                            return Scrollbar(
+                              isAlwaysShown: false,
+                              child: ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                itemCount: widget._medExamList.length,
+                                itemBuilder: (context, indice) {
+                                  final exam = widget._medExamList[indice];
+                                  return ExamItem(exam);
+                                },
+                              ),
                             );
-                          }
-                          return Scrollbar(
-                            isAlwaysShown: false,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              itemCount: widget._medExamList.length,
-                              itemBuilder: (context, indice) {
-                                final exam = widget._medExamList[indice];
-                                return ExamItem(exam);
-                              },
-                            ),
-                          );
-                        }),
+                          }),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        drawer: HamburguerMenu());
+          drawer: HamburguerMenu()),
+    );
   }
 
   void _examsUpdate(MedExam examItem) {

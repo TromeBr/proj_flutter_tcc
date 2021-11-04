@@ -320,11 +320,14 @@ class MyDataWidgetState extends State<MyDataScreen> {
           actions: <Widget>[
             TextButton(
               child: Text('Confirmar'),
-              onPressed: () {
+              onPressed: () async {
                 if(_userCPFConfirmation.text == _userCPF.text){
                   _userCPFConfirmation.text = '';
-                  print('Usuário Deletado');
-                  Navigator.of(context).pop();
+                  var _userDelete = await dataService.deleteUser();
+                  if(_userDelete)
+                    _deleteResult("Remoção Concluída", "O usuário foi deletado com sucesso", userDeleted: true);
+                  else
+                    _deleteResult("Erro ao deletar", "Por favor, tente mais tarde");
                 }
                 else{
                   setState(() {
@@ -343,6 +346,29 @@ class MyDataWidgetState extends State<MyDataScreen> {
                 });
                 _userCPFConfirmation.text = '';
                 Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _deleteResult(String error, String messageError, {bool userDeleted = false}) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(error),
+          content: Text(messageError),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                if(userDeleted)
+                  Navigator.of(context).restorablePopAndPushNamed('/LoginScreen');
+                else
+                  Navigator.of(context).pop();
               },
             ),
           ],

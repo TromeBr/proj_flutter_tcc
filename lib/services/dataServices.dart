@@ -15,6 +15,7 @@ Future<bool> userUpdate(UserContext user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String result = prefs?.getString("userContext");
     Map<String, dynamic> decoded = jsonDecode(result);
+    Encrypted passwordUpdate;
 
     final responseKey = await http.get(
       Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/key'),
@@ -23,13 +24,17 @@ Future<bool> userUpdate(UserContext user) async {
         'Access-Control-Allow-Origin': '*'
       },
     );
-    if(responseKey.statusCode == 200) {
-      Map mapResponseKey = json.decode(responseKey.body);
-      final publicKey = RSAKeyParser().parse(
-          mapResponseKey['publicKey']) as RSAPublicKey;
-      final encrypter = Encrypter(
-          RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1));
-      final passwordEncrypt = encrypter.encrypt(user.password);
+    if(responseKey.statusCode == 200 || user.password.isEmpty) {
+
+      if(user.password.isNotEmpty){
+        Map mapResponseKey = json.decode(responseKey.body);
+        final publicKey = RSAKeyParser().parse(
+            mapResponseKey['publicKey']) as RSAPublicKey;
+        final encrypter = Encrypter(
+            RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1));
+        final passwordEncrypt = encrypter.encrypt(user.password);
+        passwordUpdate = passwordEncrypt;
+      }
       String body = jsonEncode({
         'name': '${user.name}',
         'surname': '${user.surname}',
@@ -37,7 +42,7 @@ Future<bool> userUpdate(UserContext user) async {
         'sex': '${user.sex}',
         'email': '${user.email}',
         'birthDate': '${DateFormat('yyyy-MM-dd').format(user.birthDate)}',
-        'password': '${user.password.isNotEmpty ? passwordEncrypt.base64.toString() : ''}'
+        'password': '${user.password.isNotEmpty ? passwordUpdate.base64.toString() : ''}'
       });
       final response = await http.post(
         Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/update'),

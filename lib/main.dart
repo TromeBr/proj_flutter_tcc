@@ -31,6 +31,7 @@ class TCCApp extends StatelessWidget {
       routes: {
         '/consultList': (context) => MedExamConsultScreen(),
         '/myData': (context) => MyDataScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }
