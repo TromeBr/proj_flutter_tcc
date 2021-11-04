@@ -4,6 +4,7 @@ import 'models/constants.dart' as Constants;
 import 'screens/exams/consultList.dart';
 import 'screens/login/login.dart';
 import 'screens/user/myData.dart';
+import 'screens/login/splash.dart';
 
 void main() => runApp(TCCApp());
 
@@ -11,7 +12,7 @@ class TCCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: SplashScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Color(Constants.SYSTEM_PRIMARY_COLOR),

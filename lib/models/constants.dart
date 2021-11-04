@@ -7,7 +7,8 @@ const SYSTEM_SECUNDARY_COLOR = 0xFFFFFFFF;
 
 
 //Images Path
-const LOGO_PATH = 'assets/images/PUC_SP.png';
+const LOGO_PATH_S1 = 'assets/images/logoMediKeep_S12.png';
+const LOGO_PATH_B1 = 'assets/images/logoMediKeep_B1.png';
 const GENERIC_PDF_PATH = 'assets/images/generic_PDF.png';
 
 // LOGIN
@@ -34,3 +35,4 @@ const USER_REMOVE = 'Deletar conta';
 
 //Miscellaneous
 const OR_TYPED = 'Ou';
+const MEDIKEEP = 'MEDIKEEP';

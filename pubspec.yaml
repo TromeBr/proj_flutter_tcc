@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
@@ -43,6 +42,7 @@ dependencies:
   encrypt: ^5.0.1
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,9 +56,21 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+
   uses-material-design: true
-  assets:  #Caminho para setar as imagens
+  assets: #Caminho para setar as imagens
     - assets/images/PUC_SP.png
+    - assets/images/logoMediKeep_S1.png
+    - assets/images/logoMediKeep_B1.png
+    - assets/images/logoMediKeepSalmao_12.png
     - assets/images/generic_PDF.png
+  fonts:
+    - family: Syncopate
+      fonts:
+          - asset: assets/fonts/Syncopate/Syncopate-Bold.ttf
+#            style: bold
+          - asset: assets/fonts/Syncopate/Syncopate-Regular.ttf
+#            style: regular
+
 
 

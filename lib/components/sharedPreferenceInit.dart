@@ -6,5 +6,13 @@ Future<String> initializePreference() async{
   return result;
 }
 
+Future<bool> initializeApp() async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool result = prefs?.getBool("firstTime");
+  if(result == null)
+    result = true;
+  return result;
+}
+
 
 

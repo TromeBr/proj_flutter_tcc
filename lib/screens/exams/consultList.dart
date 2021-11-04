@@ -8,8 +8,6 @@ import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
-import 'package:proj_flutter_tcc/models/patient.dart';
-import 'package:proj_flutter_tcc/models/person.dart';
 import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
 import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
@@ -17,8 +15,7 @@ import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 import 'register.dart';
 
 class MedExamConsultScreen extends StatefulWidget {
-   List<MedExam> _medExamList = <MedExam>[];
-
+  List<MedExam> _medExamList = <MedExam>[];
 
   @override
   State<StatefulWidget> createState() {
@@ -33,7 +30,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
   Future<List<MedExam>> exams = examService.getExamesByCpf();
   AnimationController controller;
   bool _showCircle;
-
 
   @override
   void initState() {
@@ -193,7 +189,8 @@ class ExamItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(Icons.assignment_turned_in_sharp,
+        leading: Icon(
+          Icons.assignment_turned_in_sharp,
           color: Colors.white,
         ),
         title:
@@ -201,11 +198,12 @@ class ExamItem extends StatelessWidget {
         subtitle: Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(),
             style: TextStyle(color: Colors.white)),
         onTap: () async {
-          File fileAPI = await fileService.getFile(id: _exam.fileId, lab: _exam.lab);
+          File fileAPI =
+              await fileService.getFile(id: _exam.fileId, lab: _exam.lab);
 
-           if (fileAPI != null) {
-             _exam.file = fileAPI;
-           }
+          if (fileAPI != null) {
+            _exam.file = fileAPI;
+          }
 
           Navigator.push(
             context,
@@ -220,6 +218,4 @@ class ExamItem extends StatelessWidget {
       color: Color(Constants.SYSTEM_PRIMARY_COLOR),
     );
   }
-
-
 }
