@@ -24,6 +24,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
   TextEditingController _userEmail = TextEditingController();
   TextEditingController _userCPF = TextEditingController();
   TextEditingController _userCPFConfirmation = TextEditingController();
+  TextEditingController _userPasswordConfirmation = TextEditingController();
   TextEditingController _userFirstName = TextEditingController();
   TextEditingController _userSurname = TextEditingController();
   TextEditingController _userBirthDate = TextEditingController();
@@ -32,7 +33,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
   bool _updateVerify = false;
   UserContext _userContext;
   bool validateCPF = false;
-
+  bool passwordValidator = false;
 
   UserContext get userContext => _userContext;
 
@@ -71,14 +72,10 @@ class MyDataWidgetState extends State<MyDataScreen> {
                     onPressed: () async {
                       var errors = _userConsist();
                       if (errors.isEmpty) {
-                        var _userUpdate =
-                            await dataService.userUpdate(this._userContext);
-                        if (_userUpdate)
-                          _updateResult("Alteração concluída",
-                              "O usuário foi alterado com sucesso");
+                        if (_userPassword.text.isEmpty)
+                          updateUser();
                         else
-                          _updateResult("Erro ao atualizar",
-                              "Por favor, tente mais tarde");
+                          _showPasswordConfirmationDialog();
                       } else
                         errorReturn(context, errorsList: errors);
                     }),
@@ -96,7 +93,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
               readOnly: true,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
               child: TextFormField(
                 onChanged: hasChanged,
                 readOnly: true,
@@ -136,7 +133,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
               onChange: hasChanged,
             ),
             Container(
-                margin: EdgeInsets.only(top: 10.0, left: 10.0),
+                margin: EdgeInsets.only(top: 30.0, left: 20.0),
                 width: double.infinity,
                 alignment: Alignment.topLeft,
                 child: Row(
@@ -176,7 +173,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
                     ),
                   ],
                 )),
-            PaddingWidgetPattern(30.0),
+            PaddingWidgetPattern(15.0),
             Container(
               height: 50.0,
               width: 300.0,
@@ -211,10 +208,9 @@ class MyDataWidgetState extends State<MyDataScreen> {
     if (validateEmail(_userEmail.text)) {
       errors.add('Um E-mail válido não foi fornecido');
     }
-    if(_userPassword.text.isNotEmpty)
-      if (validatePassword(_userPassword.text)) {
-        errors.add('A senha não atende aos critérios de segurança');
-      }
+    if (_userPassword.text.isNotEmpty) if (validatePassword(_userPassword.text)) {
+      errors.add('A senha não atende aos critérios de segurança');
+    }
     return errors;
   }
 
@@ -294,6 +290,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
       },
     );
   }
+
   Future<void> _showUserConfirmationDialog() async {
     return showDialog<void>(
       context: context,
@@ -309,10 +306,8 @@ class MyDataWidgetState extends State<MyDataScreen> {
                   controller: _userCPFConfirmation,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: Constants.CPF_LABEL_TEXT,
-                    errorText: validateCPF ?  'CPF inválido' : null
-                  ),
-
+                      labelText: Constants.CPF_LABEL_TEXT,
+                      errorText: validateCPF ? 'CPF inválido' : null),
                 ),
               ],
             ),
@@ -321,15 +316,17 @@ class MyDataWidgetState extends State<MyDataScreen> {
             TextButton(
               child: Text('Confirmar'),
               onPressed: () async {
-                if(_userCPFConfirmation.text == _userCPF.text){
+                if (_userCPFConfirmation.text == _userCPF.text) {
                   _userCPFConfirmation.text = '';
                   var _userDelete = await dataService.deleteUser();
-                  if(_userDelete)
-                    _deleteResult("Remoção Concluída", "O usuário foi deletado com sucesso", userDeleted: true);
+                  if (_userDelete)
+                    _deleteResult("Remoção Concluída",
+                        "O usuário foi deletado com sucesso",
+                        userDeleted: true);
                   else
-                    _deleteResult("Erro ao deletar", "Por favor, tente mais tarde");
-                }
-                else{
+                    _deleteResult(
+                        "Erro ao deletar", "Por favor, tente mais tarde");
+                } else {
                   setState(() {
                     validateCPF = true;
                   });
@@ -353,7 +350,59 @@ class MyDataWidgetState extends State<MyDataScreen> {
       },
     );
   }
-  void _deleteResult(String error, String messageError, {bool userDeleted = false}) async {
+  Future<void> _showPasswordConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmação de Senha'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  controller: _userPasswordConfirmation,
+                  decoration: InputDecoration(
+                      labelText: 'Digite a nova senha novamente',
+                      errorText: passwordValidator ? 'Senha Inválida' : null),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirmar'),
+              onPressed: () async {
+                if (_userPasswordConfirmation.text == _userPassword.text) {
+                  _userPasswordConfirmation.text = '';
+                  updateUser();
+                } else {
+                  setState(() {
+                    passwordValidator = true;
+                  });
+                  Navigator.of(context).pop();
+                  _showPasswordConfirmationDialog();
+                }
+              },
+            ),
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                setState(() {
+                  passwordValidator = false;
+                });
+                _userPasswordConfirmation.text = '';
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteResult(String error, String messageError,
+      {bool userDeleted = false}) async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -365,8 +414,9 @@ class MyDataWidgetState extends State<MyDataScreen> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                if(userDeleted)
-                  Navigator.of(context).restorablePopAndPushNamed('/LoginScreen');
+                if (userDeleted)
+                  Navigator.of(context)
+                      .restorablePopAndPushNamed('/LoginScreen');
                 else
                   Navigator.of(context).pop();
               },
@@ -375,5 +425,15 @@ class MyDataWidgetState extends State<MyDataScreen> {
         );
       },
     );
+  }
+  Future<void> updateUser() async {
+    var _userUpdate =
+        await dataService.userUpdate(this._userContext);
+    if (_userUpdate)
+      _updateResult("Alteração concluída",
+          "O usuário foi alterado com sucesso");
+    else
+      _updateResult("Erro ao atualizar",
+          "Por favor, tente mais tarde");
   }
 }

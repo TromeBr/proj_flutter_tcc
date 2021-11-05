@@ -84,7 +84,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
               controller: _registerDoc,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
               child: TextFormField(
                 readOnly: true,
                 inputFormatters: [maskDate],
