@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:convert/convert.dart';
 import 'package:mime/mime.dart';
 import 'package:collection/collection.dart';
-import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
+import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 
 Future<File> getFile({String id = '', String lab}) async {
   try {
@@ -46,6 +46,12 @@ Future<File> getFile({String id = '', String lab}) async {
         fileReturn.writeAsBytesSync(bytes);
       }
       return fileReturn;
+    }
+    if(response.statusCode == 403)
+    {
+      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+      if(_finalUser != null)
+        return getFile(id: id, lab: lab);
     }
     if (response.statusCode == 406) {
       return null;

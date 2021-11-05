@@ -37,8 +37,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
               Container(
                 child: Image.asset(
                   Constants.LOGO_PATH_S1_P,
-                  height: 120,
-                  width: 120,
+                  height: 150,
+                  width: 150,
                   fit: BoxFit.contain,
                 ),
             ),

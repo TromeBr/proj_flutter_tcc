@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import "package:hex/hex.dart";
 
 import 'package:http/http.dart' as http;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 
 Future<String> insertExam(MedExam exam) async {
   try {
@@ -35,6 +35,12 @@ Future<String> insertExam(MedExam exam) async {
     if (response.statusCode == 200) {
       resultAPI = responseAPI['id'].toString();
     }
+    if(response.statusCode == 403)
+    {
+      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+      if(_finalUser != null)
+        return insertExam(exam);
+    }
     if (response.statusCode == 500) throw new Exception(responseAPI["error"]);
 
     return resultAPI;
@@ -61,6 +67,12 @@ Future<bool> deleteExam(String examId) async {
     Map<String, dynamic> responseAPI = jsonDecode(response.body);
     if (response.statusCode == 200) {
       resultAPI = true;
+    }
+    if(response.statusCode == 403)
+    {
+      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+      if(_finalUser != null)
+        return deleteExam(examId);
     }
     if (response.statusCode == 500) throw new Exception(responseAPI["error"]);
 

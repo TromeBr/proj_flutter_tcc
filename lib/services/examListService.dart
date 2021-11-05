@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 
 Future<List<MedExam>> getExamesByCpf() async {
   try {
@@ -32,6 +33,12 @@ Future<List<MedExam>> getExamesByCpf() async {
             lab: exam['lab'],
             /*requestingPhysician: exam['requestingPhysician'],*/ reportingPhysician: exam['reportingPhysician']));
       });
+    }
+    if(response.statusCode == 403)
+    {
+      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+      if(_finalUser != null)
+        return getExamesByCpf();
     }
     if (response.statusCode == 406) {
       medExams.clear();

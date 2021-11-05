@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:encrypt/encrypt.dart';
-import 'package:encrypt/encrypt_io.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:encrypt/encrypt_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:proj_flutter_tcc/components/appException.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,6 +39,7 @@ Future<UserContext> login(String CPF, String password) async {
       if (response.statusCode == 200) {
         user = UserContext.fromJson(mapResponse);
         prefs.setString("userContext", response.body);
+        prefs.setString("passwordContext", password);
         prefs.setBool("firstTime", false);
       } else {
         user = null;
