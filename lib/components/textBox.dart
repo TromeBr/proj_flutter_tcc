@@ -87,7 +87,7 @@ class TextBoxState extends State<TextBoxStandard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
       child: TextField(
         readOnly: readOnly,
         controller: controller,

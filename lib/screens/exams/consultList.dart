@@ -25,6 +25,7 @@ class MedExamConsultScreen extends StatefulWidget {
 
 class MedExamConsultState extends State<MedExamConsultScreen>
     with TickerProviderStateMixin {
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
   final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
   Future<List<MedExam>> exams = examService.getExamesByCpf();
@@ -42,6 +43,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
         setState(() {});
       });
     controller.repeat(reverse: true);
+    refreshList();
     super.initState();
   }
 
@@ -151,13 +153,18 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                             }
                             return Scrollbar(
                               isAlwaysShown: false,
-                              child: ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                itemCount: widget._medExamList.length,
-                                itemBuilder: (context, indice) {
-                                  final exam = widget._medExamList[indice];
-                                  return ExamItem(exam);
-                                },
+                              child: RefreshIndicator(
+                                color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                key: refreshKey,
+                                onRefresh: refreshList,
+                                child: ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: widget._medExamList.length,
+                                  itemBuilder: (context, indice) {
+                                    final exam = widget._medExamList[indice];
+                                    return ExamItem(exam);
+                                  },
+                                ),
                               ),
                             );
                           }),
@@ -177,6 +184,14 @@ class MedExamConsultState extends State<MedExamConsultScreen>
         widget._medExamList.add(examItem);
       });
     }
+  }
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      exams = examService.getExamesByCpf();
+    });
+    return null;
   }
 }
 
@@ -218,4 +233,5 @@ class ExamItem extends StatelessWidget {
       color: Color(Constants.SYSTEM_PRIMARY_COLOR),
     );
   }
+
 }
