@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 import 'package:proj_flutter_tcc/services/examService.dart' as examService;
+import 'package:share/share.dart';
 
 import 'consultList.dart';
 
@@ -93,8 +94,10 @@ class ExamConsultForm extends State<ExamConsultScreen> {
                 ),
               ),
             ),
+            PaddingWidgetPattern(25),
             if (exam.file != null)
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   PaddingWidgetPattern(10),
                   Container(
@@ -148,6 +151,18 @@ class ExamConsultForm extends State<ExamConsultScreen> {
                           ),
                     width: 150,
                   ),
+                  PaddingWidgetPattern(10),
+                  FloatingActionButton(
+                    child: Icon(Icons.share_outlined),
+                    backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                    foregroundColor: Colors.white,
+                    mini: true,
+                    tooltip: 'Compartilhar ' +
+                        (fileExtension.extension(exam.file.path) == '.pdf'
+                            ? 'Arquivo'
+                            : 'Imagem'),
+                    onPressed: () => _shareFile(exam.file.path),
+                  ),
                 ],
               )
           ],
@@ -174,5 +189,15 @@ class ExamConsultForm extends State<ExamConsultScreen> {
         );
       },
     );
+  }
+  Future<void> _shareFile(String filePath) async {
+    List<String> fileList = [];
+      if (filePath.isNotEmpty) {
+        final RenderBox box = context.findRenderObject() as RenderBox;
+        fileList.add(filePath);
+        await Share.shareFiles(fileList,
+            sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+      }
+      fileList.clear();
   }
 }
