@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:encrypt/encrypt.dart';
-import 'package:encrypt/encrypt_io.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:encrypt/encrypt_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:proj_flutter_tcc/components/appException.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 
 Future<bool> userUpdate(UserContext user) async {
   try {
@@ -54,12 +52,19 @@ Future<bool> userUpdate(UserContext user) async {
         },
       );
 
-      Map mapResponse = json.decode(body);
+
       if (response.statusCode == 200) {
-        mapResponse["token"] = UserContext.fromJson(decoded).token;
+        Map mapResponse = json.decode(response.body);
         prefs.setString("userContext", jsonEncode(mapResponse).toString());
-        prefs.setBool("firstTime", false);
+        if(user.password.isNotEmpty)
+          prefs.setString("passwordContext", user.password);
         return true;
+      }
+      if(response.statusCode == 403)
+      {
+        var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+        if(_finalUser != null)
+          return userUpdate(user);
       }
       return false;
     }
@@ -79,7 +84,7 @@ Future<bool> deleteUser() async {
 
     final response = await http.delete(
       Uri.parse(
-          'https://orchestrator-medikeep.herokuapp.com/user/' +UserContext.fromJson(decoded).CPF),
+          'https://orchestrator-medikeep.herokuapp.com/user/' + UserContext.fromJson(decoded).CPF),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
@@ -90,6 +95,12 @@ Future<bool> deleteUser() async {
     Map<String, dynamic> responseAPI = jsonDecode(response.body);
     if (response.statusCode == 200) {
       resultAPI = true;
+    }
+    if(response.statusCode == 403)
+    {
+      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
+      if(_finalUser != null)
+        return deleteUser();
     }
     if(response.statusCode == 500)
       throw new Exception(responseAPI["error"]);
