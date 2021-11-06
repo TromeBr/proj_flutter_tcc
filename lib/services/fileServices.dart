@@ -14,8 +14,11 @@ import 'package:proj_flutter_tcc/services/loginServices.dart' as loginService;
 Future<File> getFile({String id = '', String lab}) async {
   try {
     var nameFile = id + '_' + (lab ?? '');
-    Directory filesDir = Directory((await getApplicationDocumentsDirectory()).path + '/patient/files/');
-    var file = filesDir.listSync().firstWhereOrNull((file) => basename(file.path).split('.')[0] == nameFile);
+    Directory filesDir = Directory(
+        (await getApplicationDocumentsDirectory()).path + '/patient/files/');
+    if (!filesDir.existsSync()) filesDir.createSync(recursive: true);
+    var file = filesDir.listSync().firstWhereOrNull(
+        (file) => basename(file.path).split('.')[0] == nameFile);
     if (file != null) {
       return file;
     }
@@ -47,21 +50,19 @@ Future<File> getFile({String id = '', String lab}) async {
       }
       return fileReturn;
     }
-    if(response.statusCode == 403)
-    {
-      var _finalUser = await loginService.login(UserContext.fromJson(decoded).CPF, prefs?.getString("passwordContext"));
-      if(_finalUser != null)
-        return getFile(id: id, lab: lab);
+    if (response.statusCode == 403) {
+      var _finalUser = await loginService.login(
+          UserContext.fromJson(decoded).CPF,
+          prefs?.getString("passwordContext"));
+      if (_finalUser != null) return getFile(id: id, lab: lab);
     }
     if (response.statusCode == 406) {
       return null;
     }
     return null;
-  }
-  on StateError catch(error){
+  } on StateError catch (error) {
     throw new StateError(error.toString());
-  }
-  on Exception catch (error) {
+  } on Exception catch (error) {
     throw new Exception(error.toString());
   }
 }
