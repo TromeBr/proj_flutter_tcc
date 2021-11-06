@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:proj_flutter_tcc/models/patient.dart';
-
 class MedExam {
   String id;
   final String lab;
