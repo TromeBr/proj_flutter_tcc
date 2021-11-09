@@ -79,6 +79,13 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
                   controller: _registerBirthDate,
                   style: TextStyle(fontSize: 24.0),
                   decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      labelStyle: TextStyle(color: Colors.black, fontSize: 23),
                       labelText: 'Data de Nascimento',
                       suffix: InkWell(
                           onTap: () => _selectDate(context),
@@ -111,32 +118,39 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
                         style: TextStyle(fontSize: 24),
                       ),
                       Padding(padding: EdgeInsets.only(left: 10.0)),
-                      DropdownButton<String>(
-                        style: TextStyle(fontSize: 24, color: Colors.black),
-                        iconSize: 24,
-                        elevation: 16,
-                        hint: Text("Sexo"),
-                        value: _value,
-                        autofocus: true,
-                        items: <DropdownMenuItem<String>>[
-                          new DropdownMenuItem(
-                            child: new Text('Masculino'),
-                            value: 'M',
-                          ),
-                          new DropdownMenuItem(
-                            child: new Text('Feminino'),
-                            value: 'F',
-                          ),
-                          new DropdownMenuItem(
-                            child: new Text('Outro'),
-                            value: 'U',
-                          ),
-                        ],
-                        onChanged: (String val) {
-                          setState(() {
-                            _value = val;
-                          });
-                        },
+                      Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton<String>(
+                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          iconSize: 24,
+                          elevation: 16,
+                          hint: Text("Sexo"),
+                          value: _value,
+                          autofocus: true,
+                          items: <DropdownMenuItem<String>>[
+                            new DropdownMenuItem(
+                              child: new Text('Masculino'),
+                              value: 'M',
+                            ),
+                            new DropdownMenuItem(
+                              child: new Text('Feminino'),
+                              value: 'F',
+                            ),
+                            new DropdownMenuItem(
+                              child: new Text('Outro'),
+                              value: 'U',
+                            ),
+                          ],
+                          onChanged: (String val) {
+                            setState(() {
+                              _value = val;
+                            });
+                          },
+                        ),
                       ),
                     ],
                   )),
@@ -260,25 +274,29 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
   List<String> _userConsist() {
     List<String> errors = [];
     if (_registerFirstName.text.isEmpty) {
-      errors.add('O primeiro nome não foi fornecido');
+      errors.add('O primeiro nome não foi preenchido');
     }
     if (_registerSurname.text.isEmpty) {
-      errors.add('O sobrenome nome não foi fornecido');
+      errors.add('O sobrenome nome não foi preenchido');
     }
     if (_registerBirthDate.text ==
         DateFormat('yyyy-MM-dd')
             .format(DateTime.now().add(Duration(hours: -3)))
             .toString()) {
-      errors.add('Uma data de nascimento válida não foi fornecida');
+      errors.add('Data de nascimento inválido');
     }
     if (validateEmail(_registerEmail.text)) {
-      errors.add('Um E-mail válido não foi fornecido');
+      errors.add('E-mail inválido');
     }
     if (validateCPF(_registerCPF.text)) {
-      errors.add('Um CPF válido não foi fornecido');
+      errors.add('CPF inválido');
     }
-    if (validatePassword(_registerPassword.text)) {
-      errors.add('A senha não atende aos critérios de segurança');
+
+    List<String> failedCriteria = validatePassword(_registerPassword.text);
+
+    if (failedCriteria.isNotEmpty) {
+      errors.add('A senha não atende aos seguintes critérios de segurança:');
+      errors.addAll(failedCriteria);
     }
     return errors;
   }

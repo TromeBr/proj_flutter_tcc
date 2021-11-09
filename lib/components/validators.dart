@@ -10,13 +10,21 @@ bool validateEmail(String email) {
     return false;
 }
 
-bool validatePassword(String password) {
-  Pattern pattern = r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
-  RegExp regex = new RegExp(pattern);
-  if (!regex.hasMatch(password))
-    return true;
-  else
-    return false;
+List<String> validatePassword(String password) {
+  List<String> failedCriteria = [];
+  RegExp lowerCaseCriteria = new RegExp(r"^(?=.*[a-z]).+$");
+  RegExp upperCaseCriteria = new RegExp(r"^(?=.*[A-Z]).+$");
+  RegExp numberCriteria = new RegExp(r"^(?=.*\d).+$");
+
+  if (password.length < 8 || password.length > 20)
+    failedCriteria.add("Senha deve conter entre 8 e 20 caracteres");
+  if (!lowerCaseCriteria.hasMatch(password))
+    failedCriteria.add("Senha deve conter pelo menos uma letra minúscula");
+  if (!upperCaseCriteria.hasMatch(password))
+    failedCriteria.add("Senha deve conter pelo menos uma letra maiúscula");
+  if (!numberCriteria.hasMatch(password))
+    failedCriteria.add("Senha deve conter pelo menos um número");
+  return failedCriteria;
 }
 
 bool validateCPF(String cpf) {

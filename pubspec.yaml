@@ -64,6 +64,7 @@ flutter:
     - assets/images/logoMediKeep_S1.png
     - assets/images/logoMediKeep_B1.png
     - assets/images/logoMediKeepSalmao_12.png
+    - assets/images/logoMediKeep_S1_Ex.png
     - assets/images/generic_PDF.png
   fonts:
     - family: Syncopate

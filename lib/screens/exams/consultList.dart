@@ -1,13 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
+import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/medExam.dart';
+import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
 import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
@@ -27,10 +31,11 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     with TickerProviderStateMixin {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
-  final searchMargin = EdgeInsets.only(right: 10.0, left: 15.0);
-  Future<List<MedExam>> exams = examService.getExamesByCpf();
+  Future<List<MedExam>> exams;
   AnimationController controller;
   bool _showCircle;
+
+  String name = 'Teste';
 
   @override
   void initState() {
@@ -44,6 +49,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
       });
     controller.repeat(reverse: true);
     refreshList();
+    getUsername(context);
     super.initState();
   }
 
@@ -59,123 +65,147 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          extendBodyBehindAppBar: true,
-          appBar: AppBarPattern(
-            titleScreen: 'Consulta de Exames',
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  final Future<MedExam> future = Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ExamRegisterScreen();
-                      },
-                    ),
-                  );
-                  future.then((examItem) => _examsUpdate(examItem));
-                },
-              ),
-            ],
-          ),
-          body: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: width,
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              margin: searchMargin,
-                              alignment: Alignment.topCenter,
-                              child: SearchBar(),
+            extendBodyBehindAppBar: true,
+            appBar: AppBarPattern(
+              titleScreen: '',//'Consulta de Exames',
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    final Future<MedExam> future = Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ExamRegisterScreen();
+                        },
+                      ),
+                    );
+                    future.then((examItem) => _examsUpdate(examItem));
+                  },
+                ),
+              ],
+            ),
+            body: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Image.asset(
+                        Constants.LOGO_PATH_S1_EX,
+                        height: 100,
+                        width: 200,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    PaddingWidgetPattern(5),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Olá, ',
+                            style: TextStyle(
+                              fontFamily: 'Syncopate',
+                              color: Colors.blueGrey,
+                              fontSize: 23,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            name,
+                            style: TextStyle(
+                              fontFamily: 'Syncopate',
+                              color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  (_showCircle
-                      ? SizedBox(
-                          child: CircularProgressIndicator(
-                            value: controller.value,
-                            color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                            strokeWidth: 2,
-                          ),
-                          width: 100,
-                          height: 100,
-                        )
-                      : SizedBox.shrink()),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: width,
-                      margin: margin,
-                      child: FutureBuilder<List<MedExam>>(
-                          future: exams,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<MedExam>> snapshot) {
-                            if (snapshot.data != null &&
-                                snapshot.data.length >
-                                    widget._medExamList.length) {
-                              widget._medExamList.addAll(snapshot.data);
-                              _showCircle = false;
-                            } else if ((snapshot.hasError ||
-                                snapshot.data?.length == 0) && widget._medExamList.length == 0) {
-                              _showCircle = false;
-                              return Column(
-                                children: [
-                                  Icon(
-                                    Icons.assignment_outlined,
-                                    color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                    size: 100,
-                                  ),
-                                  PaddingWidgetPattern(10),
-                                  Text(
-                                    "Nenhum exame cadastrado!",
-                                    style: TextStyle(
-                                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                      fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              );
-                            }
-                            return Scrollbar(
-                              isAlwaysShown: false,
-                              child: RefreshIndicator(
+                    PaddingWidgetPattern(10),
+                    (_showCircle
+                        ? Padding(
+                          padding: const EdgeInsets.all(40.0),
+                          child: SizedBox(
+                              child: CircularProgressIndicator(
+                                value: controller.value,
                                 color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                key: refreshKey,
-                                onRefresh: refreshList,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: widget._medExamList.length,
-                                  itemBuilder: (context, indice) {
-                                    final exam = widget._medExamList[indice];
-                                    return ExamItem(exam);
-                                  },
-                                ),
+                                strokeWidth: 2,
                               ),
-                            );
-                          }),
+                              width: 100,
+                              height: 100,
+                            ),
+                        )
+                        : SizedBox.shrink()),
+                    PaddingWidgetPattern(10),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: width,
+                        margin: margin,
+                        child: FutureBuilder<List<MedExam>>(
+                            future: exams,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<MedExam>> snapshot) {
+                              if (snapshot.data != null &&
+                                  snapshot.data.length >
+                                      widget._medExamList.length) {
+                                widget._medExamList.addAll(snapshot.data);
+                                _showCircle = false;
+                              } else if ((snapshot.hasError ||
+                                      snapshot.data?.length == 0) &&
+                                  widget._medExamList.length == 0) {
+                                _showCircle = false;
+                                return Column(
+                                  children: [
+                                    Icon(
+                                      Icons.assignment_outlined,
+                                      color:
+                                          Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                      size: 100,
+                                    ),
+                                    PaddingWidgetPattern(10),
+                                    Text(
+                                      "Nenhum exame cadastrado!",
+                                      style: TextStyle(
+                                        color:
+                                            Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                );
+                              }
+                              return Scrollbar(
+                                isAlwaysShown: false,
+                                child: RefreshIndicator(
+                                  color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                  key: refreshKey,
+                                  onRefresh: refreshList,
+                                  child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    itemCount: widget._medExamList.length,
+                                    itemBuilder: (context, indice) {
+                                      final exam = widget._medExamList[indice];
+                                      return ExamItem(exam);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          drawer: HamburguerMenu()),
-    );
+            drawer: HamburguerMenu()),
+      );
   }
 
   void _examsUpdate(MedExam examItem) {
@@ -185,6 +215,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
       });
     }
   }
+
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
@@ -193,45 +224,59 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     });
     return null;
   }
+
+  Future<String> getUsername(BuildContext context) async {
+    var _user = await initializePreference();
+    if (_user != null) {
+      Map<String, dynamic> decoded = jsonDecode(_user);
+      setState(() {
+        this.name = UserContext.fromJson(decoded).name;
+      });
+    }
+  }
 }
 
-class ExamItem extends StatelessWidget {
+class ExamItem extends StatefulWidget {
   final MedExam _exam;
 
   ExamItem(this._exam);
 
   @override
+  State<StatefulWidget> createState() {
+    return ExamItemState();
+  }
+}
+class ExamItemState extends State<ExamItem>{
+
+  @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        leading: Icon(
-          Icons.assignment_turned_in_sharp,
-          color: Colors.white,
+        child: ListTile(
+          leading: Icon(
+            Icons.assignment_outlined,
+            color: Colors.white,
+          ),
+          title:
+          Text(widget._exam.exam.toString(), style: TextStyle(color: Colors.white)),
+          subtitle: Text(DateFormat('dd/MM/yyyy').format(widget._exam.date).toString(),
+              style: TextStyle(color: Colors.white)),
+          onTap: () async {
+
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ExamConsultScreen(widget._exam);
+                },
+              ),
+            );
+          },
         ),
-        title:
-            Text(_exam.exam.toString(), style: TextStyle(color: Colors.white)),
-        subtitle: Text(DateFormat('dd/MM/yyyy').format(_exam.date).toString(),
-            style: TextStyle(color: Colors.white)),
-        onTap: () async {
-          File fileAPI =
-              await fileService.getFile(id: _exam.fileId, lab: _exam.lab);
-
-          if (fileAPI != null) {
-            _exam.file = fileAPI;
-          }
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return ExamConsultScreen(_exam);
-              },
-            ),
-          );
-        },
-      ),
-      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-    );
+        color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+      );
   }
 
 }
+
+

@@ -29,6 +29,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerDoc = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
+  bool _isLoading = false;
 
   //ImagePicker
   PickedFile _image;
@@ -47,6 +48,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     _image = null;
     imageFile = null;
     filePath = null;
+    _isLoading = false;
     DateTime now = DateTime.now();
     _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString();
   }
@@ -91,6 +93,13 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                 controller: _registerData,
                 style: TextStyle(fontSize: 24.0),
                 decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                    ),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 23),
                     labelText: 'Data',
                     suffix: InkWell(
                         onTap: () => _selectDate(context),
@@ -120,11 +129,6 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
-                      side: BorderSide(
-                        width: 2,
-                        color: Colors.white,
-                        style: BorderStyle.solid,
-                      ),
                     ),
                     onPressed: imageFile == null && filePath == null
                         ? () async => _openFile()
@@ -148,11 +152,6 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
-                      side: BorderSide(
-                        width: 2,
-                        color: Colors.white,
-                        style: BorderStyle.solid,
-                      ),
                     ),
                     onPressed: imageFile == null && filePath == null
                         ? () async => _imagePicker(context)
@@ -229,8 +228,17 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                       )),
             (imageFile == null && filePath == null
                 ? PaddingWidgetPattern(30.0)
-                : PaddingWidgetPattern(5.0)),
-            Container(
+                : PaddingWidgetPattern(15.0)),
+            _isLoading ? Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(
+                    color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                    strokeWidth: 2,
+                  ),
+                  width: 50,
+                  height: 50,
+                )
+            ) : Container(
               width: 200.0,
               height: 50.0,
               child: OutlinedButton(
@@ -239,13 +247,11 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                   backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
-                  side: BorderSide(
-                    width: 2,
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  ),
                 ),
                 onPressed: () {
+                  setState(() {
+                    _isLoading = true;
+                  });
                   _CreateExam(context);
                 },
               ),
@@ -376,6 +382,9 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () {
+                    setState(() {
+                      _isLoading = false;
+                    });
                     Navigator.of(context).pop();
                   },
                 ),

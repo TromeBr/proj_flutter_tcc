@@ -38,6 +38,7 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   MedExam exam;
+
   PDFViewController PDFController;
   int pages = 0;
   int indexPage = 0;
@@ -45,28 +46,39 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   ExamConsultForm(this.exam) {
     _id = exam.id;
     _registerExam.text = exam.exam;
-    _registerDoc.text = exam.exam;//exam.requestingPhysician["nome"];
+    _registerDoc.text = exam.requestingPhysician != null
+        ? exam.requestingPhysician["nome"]
+        : "";
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 
+  get fileApi => fileService
+      .getFile(id: exam.fileId, lab: exam.lab)
+      .then((value) => exam.file = value);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarPattern(
         titleScreen: 'Exame',
-        actions: this.exam.lab == null ? <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete_outline_sharp),
-            onPressed: () async {
-              var _ExamDelete = await examService.deleteExam(this.exam.id);
-              if(_ExamDelete)
-                _deleteResult("Remoção Concluída", "O exame foi deletado com sucesso", idExam: this.exam.id);
-              else
-                _deleteResult("Erro ao deletar", "Por favor, tente mais tarde");
-            },
-          ),
-        ] : null,
+        actions: this.exam.lab == null
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.delete_outline_sharp),
+                  onPressed: () async {
+                    var _ExamDelete =
+                        await examService.deleteExam(this.exam.id);
+                    if (_ExamDelete)
+                      _deleteResult("Remoção Concluída",
+                          "O exame foi deletado com sucesso",
+                          idExam: this.exam.id);
+                    else
+                      _deleteResult(
+                          "Erro ao deletar", "Por favor, tente mais tarde");
+                  },
+                ),
+              ]
+            : null,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -89,87 +101,118 @@ class ExamConsultForm extends State<ExamConsultScreen> {
                 controller: _registerData,
                 style: TextStyle(fontSize: 24.0),
                 decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 23),
                   labelText: 'Data',
                   //labelStyle: TextStyle(color: Color(systemPrimaryColor))
                 ),
               ),
             ),
             PaddingWidgetPattern(25),
-            if (exam.file != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PaddingWidgetPattern(10),
-                  Container(
-                    child: fileExtension.extension(exam.file.path) != '.pdf'
-                        ? FullScreenWidget(
-                            child: Center(
-                              child: Hero(
-                                tag: "smallImage",
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.file(
-                                    exam.file,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PDFViewer(exam.file)),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    Constants.GENERIC_PDF_PATH,
-                                    alignment: Alignment.center,
-                                    width: 75,
-                                    height: 75,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      width: 70,
-                                      child: Text(
-                                        fileExtension.basenameWithoutExtension(
-                                            exam.file.path),
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
+            FutureBuilder<File>(
+                  future: fileApi,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PaddingWidgetPattern(10),
+                          Container(
+                            child: fileExtension.extension(exam.file.path) !=
+                                    '.pdf'
+                                ? FullScreenWidget(
+                                    child: Center(
+                                      child: Hero(
+                                        tag: "smallImage",
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          child: Image.file(
+                                            exam.file,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PDFViewer(exam.file)),
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            Constants.GENERIC_PDF_PATH,
+                                            alignment: Alignment.center,
+                                            width: 75,
+                                            height: 75,
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                          Flexible(
+                                            child: Container(
+                                              width: 70,
+                                              child: Text(
+                                                fileExtension
+                                                    .basenameWithoutExtension(
+                                                        exam.file.path),
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                            width: 150,
                           ),
-                    width: 150,
+                          PaddingWidgetPattern(10),
+                          FloatingActionButton(
+                            child: Icon(Icons.share_outlined),
+                            backgroundColor:
+                                Color(Constants.SYSTEM_PRIMARY_COLOR),
+                            foregroundColor: Colors.white,
+                            mini: true,
+                            tooltip: 'Compartilhar ' +
+                                (fileExtension.extension(exam.file.path) ==
+                                        '.pdf'
+                                    ? 'Arquivo'
+                                    : 'Imagem'),
+                            onPressed: () => _shareFile(exam.file.path),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                          strokeWidth: 2,
+                        ),
+                        width: 50,
+                        height: 50,
+                      ));
+                    }
+                  }
                   ),
-                  PaddingWidgetPattern(10),
-                  FloatingActionButton(
-                    child: Icon(Icons.share_outlined),
-                    backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                    foregroundColor: Colors.white,
-                    mini: true,
-                    tooltip: 'Compartilhar ' +
-                        (fileExtension.extension(exam.file.path) == '.pdf'
-                            ? 'Arquivo'
-                            : 'Imagem'),
-                    onPressed: () => _shareFile(exam.file.path),
-                  ),
-                ],
-              )
           ],
         ),
       ),
     );
   }
+
   void _deleteResult(String error, String messageError, {String idExam}) async {
     showDialog<void>(
       context: context,
@@ -190,14 +233,15 @@ class ExamConsultForm extends State<ExamConsultScreen> {
       },
     );
   }
+
   Future<void> _shareFile(String filePath) async {
     List<String> fileList = [];
-      if (filePath.isNotEmpty) {
-        final RenderBox box = context.findRenderObject() as RenderBox;
-        fileList.add(filePath);
-        await Share.shareFiles(fileList,
-            sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-      }
-      fileList.clear();
+    if (filePath.isNotEmpty) {
+      final RenderBox box = context.findRenderObject() as RenderBox;
+      fileList.add(filePath);
+      await Share.shareFiles(fileList,
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    }
+    fileList.clear();
   }
 }
