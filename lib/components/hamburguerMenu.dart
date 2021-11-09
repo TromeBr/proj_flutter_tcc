@@ -5,6 +5,7 @@ import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/login/login.dart';
+import 'package:proj_flutter_tcc/screens/user/aboutMediKeep.dart';
 import 'package:proj_flutter_tcc/screens/user/myData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,8 +43,8 @@ class HamburguerMenuState extends State<HamburguerMenu> {
               color: Color(Constants.SYSTEM_PRIMARY_COLOR),
             ),
             arrowColor: Colors.white,
-            accountName: Text(name),
-            accountEmail: Text(email),
+            accountName: Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,),
+            accountEmail: Text(email, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15) ,),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(
@@ -51,7 +52,7 @@ class HamburguerMenuState extends State<HamburguerMenu> {
                 color: Color(Constants.SYSTEM_PRIMARY_COLOR),
               ),
             ),
-            onDetailsPressed: () {},
+            //onDetailsPressed: () {},
             otherAccountsPictures: <Widget>[
               Column(
                 children: <Widget>[
@@ -86,6 +87,20 @@ class HamburguerMenuState extends State<HamburguerMenu> {
             },
           ),
           ListTile(
+            title: Text('Sobre o Medikeep'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AboutMedikeepScreen();
+                  },
+                ),
+              );
+            },
+          ),
+          ListTile(
             title: Text('Sair'),
             onTap: ()  {
               //Navigator.pop(context);
@@ -102,6 +117,7 @@ class HamburguerMenuState extends State<HamburguerMenu> {
   Future<void> logout(BuildContext context) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('userContext');
+      prefs.remove('passwordContext');
       prefs.remove('firstTime');
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));

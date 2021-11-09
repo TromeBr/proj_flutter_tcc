@@ -88,6 +88,7 @@ Future<void> userSignUp(UserContext user) async {
     if (response.statusCode == 200) {
       mapResponse["token"] = json.decode(response.body)["token"];
       prefs.setString("userContext", jsonEncode(mapResponse).toString());
+      prefs.setString("passwordContext", user.password);
       prefs.setBool("firstTime", false);
     } else {
       throw new Exception(json.decode(response.body)["errors"]);

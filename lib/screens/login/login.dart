@@ -24,8 +24,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
   final TextEditingController _loginCPF = TextEditingController();
   final TextEditingController _loginPassword = TextEditingController();
   bool _loginButtonVerify = false;
-  bool _isLoading = false;
-  bool _selected = false;
+  bool _isLoading;
+  bool _selected;
 
   @override
   void initState() {
@@ -47,8 +47,8 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                 Container(
                   child: Image.asset(
                     Constants.LOGO_PATH_S1_P,
-                    height: 120,
-                    width: 120,
+                    height: 150,
+                    width: 200,
                     fit: BoxFit.contain,
                   ),
               ),
@@ -63,7 +63,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              //PaddingWidgetPattern(8.0),
+              PaddingWidgetPattern(13.0),
                 TextBoxStandard(
                   nameLabel: Constants.CPF_LABEL_TEXT,
                   keyboardType: TextInputType.number,
@@ -181,7 +181,7 @@ class LoginUpdateWidgetState extends State<LoginScreen> {
       return goToMedConsultScreenTest(context);
     } else {
       alert(context, "Login", msg: "Login Inválido");
-      _loginCPF.text = '';
+      //_loginCPF.text = '';
       _loginPassword.text = '';
       setState(() {
         _loginButtonVerify = false;

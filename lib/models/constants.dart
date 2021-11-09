@@ -10,6 +10,7 @@ const SYSTEM_SECUNDARY_COLOR = 0xFFFFFFFF;
 const LOGO_PATH_S1 = 'assets/images/logoMediKeep_S12.png';
 const LOGO_PATH_B1 = 'assets/images/logoMediKeep_B1.png';
 const LOGO_PATH_S1_P = 'assets/images/logoMediKeep_S1.png';
+const LOGO_PATH_S1_EX = 'assets/images/logoMediKeep_S1_Ex.png';
 const GENERIC_PDF_PATH = 'assets/images/generic_PDF.png';
 
 // LOGIN
@@ -32,6 +33,9 @@ const RECORD_USER_BUTTON_TEXT = 'Registrar';
 //User Data
 const DATA_USER_TITLE_SCREEN = 'Dados do usuário';
 const USER_REMOVE = 'Deletar conta';
+
+//About MediKeep
+const ABOUT_SCREEN = 'Sobre o Medikeep';
 
 
 //Miscellaneous

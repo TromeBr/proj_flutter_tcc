@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 
 class TextBoxStandard extends StatefulWidget {
   final String nameLabel;
@@ -89,11 +91,19 @@ class TextBoxState extends State<TextBoxStandard> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
       child: TextField(
+        cursorColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
         readOnly: readOnly,
         controller: controller,
         style: TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+          ),
           labelText: nameLabel,
+          labelStyle: TextStyle(color: Colors.black, fontSize: 23),
           hintText: hintLabel,
           icon: icon != null ? Icon(icon, color: iconColor) : null,
           suffix: obscureText
