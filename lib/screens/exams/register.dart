@@ -44,15 +44,19 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   FileType _pickingType = FileType.custom;
 
   void initState() {
+    clearCache();
+    _isLoading = false;
+    DateTime now = DateTime.now();
+    context != null ? _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString():null;
+  }
+
+  void clearCache()
+  {
     if (_paths != null) _clearCache();
     _image = null;
     imageFile = null;
     filePath = null;
-    _isLoading = false;
-    DateTime now = DateTime.now();
-    _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString();
   }
-
   Future _getImage(ImageSource source) async {
     try {
       var image = await ImagePicker.platform.pickImage(source: source);
@@ -217,7 +221,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                                           : 'Imagem'),
                                   onPressed: () {
                                     setState(() {
-                                      initState();
+                                      clearCache();
                                     });
                                   },
                                 ),
@@ -371,6 +375,9 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         Navigator.pop(context, createdExam);
       }
       else{
+        setState(() {
+          _isLoading = false;
+        });
         showDialog<void>(
           context: context,
           barrierDismissible: false,
@@ -382,9 +389,6 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () {
-                    setState(() {
-                      _isLoading = false;
-                    });
                     Navigator.of(context).pop();
                   },
                 ),
@@ -394,6 +398,9 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
         );
       }
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       showDialog<void>(
         context: context,
         barrierDismissible: false,
