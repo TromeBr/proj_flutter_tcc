@@ -220,6 +220,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
     setState(() {
+      widget._medExamList.clear();
       exams = examService.getExamesByCpf();
     });
     return null;
