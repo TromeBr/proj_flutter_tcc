@@ -283,7 +283,7 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
         DateFormat('yyyy-MM-dd')
             .format(DateTime.now().add(Duration(hours: -3)))
             .toString()) {
-      errors.add('Data de nascimento inválido');
+      errors.add('Data de nascimento inválida');
     }
     if (validateEmail(_registerEmail.text)) {
       errors.add('E-mail inválido');
