@@ -274,10 +274,12 @@ class MyDataWidgetState extends State<MyDataScreen> {
         email: _userEmail.text);
     if (userChanged(_newUser)) {
       setState(() {
+        this._userContext = _newUser;
         _updateVerify = true;
       });
     } else {
       setState(() {
+        getUser(context);
         _updateVerify = false;
       });
     }
@@ -394,6 +396,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
                 if (_userPasswordConfirmation.text == _userPassword.text) {
                   _userPasswordConfirmation.text = '';
                   updateUser();
+                  Navigator.of(context).pop();
                 } else {
                   setState(() {
                     passwordValidator = true;
@@ -432,11 +435,10 @@ class MyDataWidgetState extends State<MyDataScreen> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
+                Navigator.of(context).pop();
                 if (userDeleted)
                   Navigator.of(context)
-                      .restorablePopAndPushNamed('/LoginScreen');
-                else
-                  Navigator.of(context).pop();
+                      .restorablePopAndPushNamed('/login');
               },
             ),
           ],

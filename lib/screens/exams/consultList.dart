@@ -52,7 +52,16 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     getUsername(context);
     super.initState();
   }
-
+  @override
+  Future<void> didChangeDependencies() async {
+    var _user = await initializePreference();
+    if (_user != null) {
+      Map<String, dynamic> decoded = jsonDecode(_user);
+      if (this.name != UserContext.fromJson(decoded).name)
+        this.name = UserContext.fromJson(decoded).name;
+    }
+    super.didChangeDependencies();
+  }
   @override
   void dispose() {
     controller.dispose();
