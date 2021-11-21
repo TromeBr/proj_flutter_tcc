@@ -63,7 +63,7 @@ class TextBoxState extends State<TextBoxStandard> {
   final bool wordSuggestion;
   final bool autocorrect;
   final TextInputType keyboardType;
-  final Function onChange;
+  Function onChange;
   final Function onTap;
   final bool readOnly;
   

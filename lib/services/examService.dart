@@ -16,7 +16,7 @@ Future<String> insertExam(MedExam exam) async {
     String body = jsonEncode({
       "exam": '${exam.exam}',
       "date": '${exam.date}',
-      //"requestingPhysician": '${exam.requestingPhysician}',
+      "requestingPhysician": exam.requestingPhysician,
       "patient": '${UserContext.fromJson(decoded).CPF}',
       "file": '${HEX.encode(await exam.file.readAsBytes())}'
     });
@@ -77,6 +77,26 @@ Future<bool> deleteExam(String examId) async {
     if (response.statusCode == 500) throw new Exception(responseAPI["error"]);
 
     return resultAPI;
+  } on Exception catch (error) {
+    throw new Exception(error.toString());
+  }
+}
+
+
+Future<String> getDoctor(String CRM, String UF) async {
+  try {
+
+    String url = 'https://www.consultacrm.com.br/api/index.php?tipo=crm&uf=$UF&q=$CRM&chave=2528987712&destino=json';
+
+
+    final response = await http.get(Uri.parse(url),);
+    Map mapResponse = json.decode(response.body);
+    if (response.statusCode == 200) {
+      if(mapResponse['item'].isEmpty)
+        return '';
+      return mapResponse['item'][0]['nome'];
+    }
+  return '';
   } on Exception catch (error) {
     throw new Exception(error.toString());
   }

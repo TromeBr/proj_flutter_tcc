@@ -48,7 +48,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
         setState(() {});
       });
     controller.repeat(reverse: true);
-    refreshList();
+    //refreshList();
     getUsername(context);
     super.initState();
   }
@@ -90,7 +90,10 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                         },
                       ),
                     );
-                    future.then((examItem) => _examsUpdate(examItem));
+                    future.then((examItem) {
+                      //refreshList();
+                      //_examsUpdate(examItem);
+                    });
                   },
                 ),
               ],
@@ -195,9 +198,12 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                                 child: RefreshIndicator(
                                   color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                                   key: refreshKey,
+                                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
                                   onRefresh: refreshList,
+                                   strokeWidth: 3,
+                                  displacement: 100,
                                   child: ListView.builder(
-                                    physics: BouncingScrollPhysics(),
+                                    physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                                     itemCount: widget._medExamList.length,
                                     itemBuilder: (context, indice) {
                                       final exam = widget._medExamList[indice];
@@ -225,11 +231,11 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     }
   }
 
-  Future<Null> refreshList() async {
+  Future<void> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
     setState(() {
-      widget._medExamList.clear();
+      //widget._medExamList.clear();
       exams = examService.getExamesByCpf();
     });
     return null;
@@ -262,6 +268,10 @@ class ExamItemState extends State<ExamItem>{
   Widget build(BuildContext context) {
     return Card(
         child: ListTile(
+          trailing: widget._exam.lab != null ? Icon(
+            Icons.add_business_sharp,
+            color: Colors.white,
+          ) : null,
           leading: Icon(
             Icons.assignment_outlined,
             color: Colors.white,
@@ -270,9 +280,8 @@ class ExamItemState extends State<ExamItem>{
           Text(widget._exam.exam.toString(), style: TextStyle(color: Colors.white)),
           subtitle: Text(DateFormat('dd/MM/yyyy').format(widget._exam.date).toString(),
               style: TextStyle(color: Colors.white)),
+
           onTap: () async {
-
-
             Navigator.push(
               context,
               MaterialPageRoute(
