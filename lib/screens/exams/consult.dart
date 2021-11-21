@@ -46,9 +46,10 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   ExamConsultForm(this.exam) {
     _id = exam.id;
     _registerExam.text = exam.exam;
-    _registerDoc.text = exam.requestingPhysician != null
-        ? exam.requestingPhysician["nome"]
-        : "";
+    //_registerDoc.text = exam.requestingPhysician != null
+    //    ? exam.requestingPhysician["nome"]
+    //    : "";
+    _registerDoc.text = 'Frederico Martins';
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 

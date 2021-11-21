@@ -40,9 +40,9 @@ Future<bool> userUpdate(UserContext user) async {
         'sex': '${user.sex}',
         'email': '${user.email}',
         'birthDate': '${DateFormat('yyyy-MM-dd').format(user.birthDate)}',
-        'password': '${user.password.isNotEmpty ? passwordUpdate.base64.toString() : ''}'
+        'password': user.password.isNotEmpty ? '${passwordUpdate.base64.toString()}' : ''
       });
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse('https://orchestrator-medikeep.herokuapp.com/auth/update'),
         body: body,
         headers: <String, String>{
@@ -55,9 +55,14 @@ Future<bool> userUpdate(UserContext user) async {
 
       if (response.statusCode == 200) {
         Map mapResponse = json.decode(response.body);
+        prefs.remove('userContext');
         prefs.setString("userContext", jsonEncode(mapResponse).toString());
-        if(user.password.isNotEmpty)
+        if(user.password.isNotEmpty){
+          prefs.remove('passwordContext');
           prefs.setString("passwordContext", user.password);
+        }
+
+
         return true;
       }
       if(response.statusCode == 403)
@@ -84,7 +89,7 @@ Future<bool> deleteUser() async {
 
     final response = await http.delete(
       Uri.parse(
-          'https://orchestrator-medikeep.herokuapp.com/user/' + UserContext.fromJson(decoded).CPF),
+          'https://orchestrator-medikeep.herokuapp.com/auth/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
