@@ -26,10 +26,12 @@ class ExamRegisterScreen extends StatefulWidget {
 
 class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerExam = TextEditingController();
+  final TextEditingController _registerCRM = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   bool _isLoading = false;
+  bool _searchButtonVerify = false;
 
   //ImagePicker
   PickedFile _image;
@@ -43,20 +45,24 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   bool _loadingPath = false;
   FileType _pickingType = FileType.custom;
 
+  String _value = '00';
+
   void initState() {
     clearCache();
     _isLoading = false;
     DateTime now = DateTime.now();
-    context != null ? _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString():null;
+    context != null
+        ? _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString()
+        : null;
   }
 
-  void clearCache()
-  {
+  void clearCache() {
     if (_paths != null) _clearCache();
     _image = null;
     imageFile = null;
     filePath = null;
   }
+
   Future _getImage(ImageSource source) async {
     try {
       var image = await ImagePicker.platform.pickImage(source: source);
@@ -86,8 +92,86 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
               controller: _registerExam,
             ),
             TextBoxStandard(
-              nameLabel: 'Médico Solicitante',
-              controller: _registerDoc,
+              nameLabel: 'CRM',
+              controller: _registerCRM,
+              keyboardType: TextInputType.number,
+              onChange: enableButton,
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 20.0, left: 20.0),
+                width: double.infinity,
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: [
+                    Text(
+                      'UF:',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10.0)),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: DropdownButton<String>(
+                        style: TextStyle(fontSize: 24, color: Colors.black),
+                        iconSize: 24,
+                        elevation: 16,
+                        hint: Text("UF"),
+                        value: _value,
+                        autofocus: true,
+                        items: Constants.ESTADOS.entries
+                            .map<DropdownMenuItem<String>>((entry) {
+                          return new DropdownMenuItem(
+                            value: entry.key,
+                            child: Text(entry.value),
+                          );
+                        }).toList(),
+                        onChanged: (String val) {
+                          setState(() {
+                            _value = val;
+                          });
+                          enableButton('');
+                        },
+                      ),
+                    ),
+                  ],
+                )),
+            Container(
+              padding: EdgeInsets.only(top: 10.0, left: 20.0),
+              alignment: Alignment.topLeft,
+              child: FloatingActionButton(
+                heroTag: "btnFind",
+                child: Icon(Icons.person_search_sharp),
+                backgroundColor: _searchButtonVerify
+                    ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                    : Colors.grey,
+                foregroundColor: Colors.white,
+                //mini: true,
+                tooltip: 'Pesquisar ',
+                onPressed: _searchButtonVerify ? () => _docPick() : null,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
+              child: TextField(
+                readOnly: true,
+                controller: _registerDoc,
+                style: TextStyle(fontSize: 24.0),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 23),
+                  labelText: 'Médico Solicitante',
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
@@ -98,10 +182,12 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                 style: TextStyle(fontSize: 24.0),
                 decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      borderSide: BorderSide(
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      borderSide: BorderSide(
+                          color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
                     ),
                     labelStyle: TextStyle(color: Colors.black, fontSize: 23),
                     labelText: 'Data',
@@ -211,8 +297,10 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                 ),
                                 FloatingActionButton(
+                                  heroTag: "btnDel",
                                   child: Icon(Icons.close_sharp),
-                                  backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                  backgroundColor:
+                                      Color(Constants.SYSTEM_PRIMARY_COLOR),
                                   foregroundColor: Colors.white,
                                   mini: true,
                                   tooltip: 'Deletar ' +
@@ -233,37 +321,52 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             (imageFile == null && filePath == null
                 ? PaddingWidgetPattern(30.0)
                 : PaddingWidgetPattern(15.0)),
-            _isLoading ? Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(
-                    color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                    strokeWidth: 2,
+            _isLoading
+                ? Center(
+                    child: SizedBox(
+                    child: CircularProgressIndicator(
+                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                      strokeWidth: 2,
+                    ),
+                    width: 50,
+                    height: 50,
+                  ))
+                : Container(
+                    width: 200.0,
+                    height: 50.0,
+                    child: OutlinedButton(
+                      child: Text('Cadastrar',
+                          style: TextStyle(color: Colors.white)),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        _CreateExam(context);
+                      },
+                    ),
                   ),
-                  width: 50,
-                  height: 50,
-                )
-            ) : Container(
-              width: 200.0,
-              height: 50.0,
-              child: OutlinedButton(
-                child: Text('Cadastrar', style: TextStyle(color: Colors.white)),
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  _CreateExam(context);
-                },
-              ),
-            ),
+            PaddingWidgetPattern(10.0)
           ],
         ),
       ),
     );
+  }
+
+  void enableButton(String _) {
+    if (_registerCRM.text.isNotEmpty && _value != '00') {
+      setState(() {
+        _searchButtonVerify = true;
+      });
+    } else {
+      setState(() {
+        _searchButtonVerify = false;
+      });
+    }
   }
 
   void _imagePicker(BuildContext context) {
@@ -294,6 +397,39 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             ),
           );
         });
+  }
+
+  Future<void> _docPick() async {
+    if (_registerCRM.text.isNotEmpty && _value != '00') {
+      var docName = await examService.getDoctor(_registerCRM.text, _value);
+      if(docName.isNotEmpty){
+        setState(() {
+          _registerDoc.text = docName;
+        });
+      }
+      else{
+        _registerDoc.text = '';
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Médico não encontrado'),
+              content: Text('Por favor, tente outra indentificação'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+
+      }
+    }
   }
 
   void _openFile() async {
@@ -343,6 +479,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     List<String> _camposAlert = [];
     final String exam = _registerExam.text;
     final String doctorName = _registerDoc.text;
+    final String crmNumber = _registerCRM.text;
     final DateTime date = DateTime.parse(_registerData.text != ''
         ? _registerData.text.split('/').reversed.join('')
         : '1900/01/01');
@@ -353,7 +490,13 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
             : null;
 
     if (exam.isEmpty) {
-      _camposAlert.add('Exame');
+      _camposAlert.add('Tipo');
+    }
+    if (crmNumber.isEmpty) {
+      _camposAlert.add('CRM');
+    }
+    if (_value == '00') {
+      _camposAlert.add('UF');
     }
     if (doctorName.isEmpty) {
       _camposAlert.add('Médico Solicitante');
@@ -361,20 +504,23 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     if (DateFormat('yyyy-MM-dd').format(date).toString() == '1900-01-01') {
       _camposAlert.add('Data');
     }
-    if(fileRegister == null){
+    if (fileRegister == null) {
       _camposAlert.add('Arquivo');
     }
 
     if (_camposAlert.isEmpty) {
-      //Map<String, dynamic> doctorAttribute = {'nome': doctorName,'crm': 54654655};
-      MedExam createdExam = MedExam(exam, date, file: fileRegister, /*requestingPhysician: doctorAttribute*/);
+      Map<String, dynamic> doctorAttribute = {'nome': doctorName,'crm': crmNumber, 'uf': _value};
+      MedExam createdExam = MedExam(
+        exam,
+        date,
+        file: fileRegister, requestingPhysician: doctorAttribute
+      );
       var ExamInsert = await examService.insertExam(createdExam);
-      if(ExamInsert != null){
+      if (ExamInsert != null) {
         createdExam.id = ExamInsert;
         createdExam.fileId = ExamInsert;
         Navigator.pop(context, createdExam);
-      }
-      else{
+      } else {
         setState(() {
           _isLoading = false;
         });

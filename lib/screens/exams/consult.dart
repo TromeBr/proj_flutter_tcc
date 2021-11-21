@@ -35,9 +35,11 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   String _id;
   final TextEditingController _registerExam = TextEditingController();
   final TextEditingController _registerDoc = TextEditingController();
+  final TextEditingController _registerCRM = TextEditingController();
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   MedExam exam;
+  String _value;
 
   PDFViewController PDFController;
   int pages = 0;
@@ -46,10 +48,15 @@ class ExamConsultForm extends State<ExamConsultScreen> {
   ExamConsultForm(this.exam) {
     _id = exam.id;
     _registerExam.text = exam.exam;
-    //_registerDoc.text = exam.requestingPhysician != null
-    //    ? exam.requestingPhysician["nome"]
-    //    : "";
-    _registerDoc.text = 'Frederico Martins';
+    _registerDoc.text = exam.requestingPhysician != null
+        ? exam.requestingPhysician["nome"]
+        : "";
+    _registerCRM.text = exam.requestingPhysician != null
+        ? exam.requestingPhysician['crm'].toString()
+        : "";
+    _value = exam.requestingPhysician != null
+    ? exam.requestingPhysician['uf']
+        : "00";
     _registerData.text = DateFormat('dd/MM/yyyy').format(exam.date).toString();
   }
 
@@ -88,6 +95,51 @@ class ExamConsultForm extends State<ExamConsultScreen> {
               nameLabel: 'Tipo',
               controller: _registerExam,
               readOnly: true,
+            ),
+            TextBoxStandard(
+              nameLabel: 'CRM',
+              controller: _registerCRM,
+              keyboardType: TextInputType.number,
+              readOnly: true,
+            ),
+            IgnorePointer(
+              ignoring: true,
+              child: Container(
+                  margin: EdgeInsets.only(top: 20.0, left: 20.0),
+                  width: double.infinity,
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        'UF:',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 10.0)),
+                      Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton<String>(
+                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          iconSize: 0,
+                          elevation: 16,
+                          hint: Text("UF"),
+                          value: _value,
+                          autofocus: true,
+                          items: Constants.ESTADOS.entries
+                              .map<DropdownMenuItem<String>>((entry) {
+                            return new DropdownMenuItem(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  )),
             ),
             TextBoxStandard(
               nameLabel: 'Médico Solicitante',

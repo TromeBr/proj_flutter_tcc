@@ -8,7 +8,6 @@ class MedExam {
   String fileId;
   File file;
   final Map requestingPhysician;
-  final Map reportingPhysician;
   final DateTime date;
 
   MedExam(
@@ -19,7 +18,6 @@ class MedExam {
     this.fileId,
     this.file,
     this.requestingPhysician,
-    this.reportingPhysician,
   });
 
   @override
