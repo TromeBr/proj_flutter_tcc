@@ -31,7 +31,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     with TickerProviderStateMixin {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final margin = EdgeInsets.only(bottom: 10.0, right: 10.0, left: 10.0);
-  Future<List<MedExam>> exams;
+  Future<List<MedExam>> exams = examService.getExamesByCpf();
   AnimationController controller;
   bool _showCircle;
 
@@ -48,7 +48,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
         setState(() {});
       });
     controller.repeat(reverse: true);
-    //refreshList();
     getUsername(context);
     super.initState();
   }
@@ -91,8 +90,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                       ),
                     );
                     future.then((examItem) {
-                      //refreshList();
-                      //_examsUpdate(examItem);
+                      _examsUpdate(examItem);
                     });
                   },
                 ),
@@ -235,7 +233,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
     setState(() {
-      //widget._medExamList.clear();
       exams = examService.getExamesByCpf();
     });
     return null;
