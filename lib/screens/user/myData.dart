@@ -11,6 +11,7 @@ import 'package:proj_flutter_tcc/models/constants.dart' as Constants;
 import 'package:proj_flutter_tcc/components/textBox.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/services/dataServices.dart' as dataService;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDataScreen extends StatefulWidget {
   @override
@@ -116,6 +117,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
               nameLabel: Constants.NAME_LABEL_TEXT,
               controller: _userFirstName,
               onChange: hasChanged,
+              maxLength: 20,
             ),
             TextBoxStandard(
               nameLabel: Constants.SURNAME_LABEL_TEXT,
@@ -131,6 +133,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
               controller: _userEmail,
               keyboardType: TextInputType.emailAddress,
               onChange: hasChanged,
+              maxLength: 50,
             ),
 
             TextBoxStandard(
@@ -424,6 +427,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
 
   void _deleteResult(String error, String messageError,
       {bool userDeleted = false}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -434,9 +438,12 @@ class MyDataWidgetState extends State<MyDataScreen> {
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 if (userDeleted)
+                  prefs.remove('userContext');
+                  prefs.remove('passwordContext');
+                  prefs.remove('firstTime');
                   Navigator.of(context)
                       .restorablePopAndPushNamed('/login');
               },

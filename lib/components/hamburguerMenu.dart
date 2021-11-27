@@ -60,13 +60,13 @@ class HamburguerMenuState extends State<HamburguerMenu> {
                   GestureDetector(
                     onTap: () {
                     },
-                    child: CircleAvatar(
-                      child: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                      backgroundColor: Colors.transparent,
-                    ),
+                    // child: CircleAvatar(
+                    //   child: Icon(
+                    //     Icons.settings,
+                    //     color: Colors.white,
+                    //   ),
+                    //   backgroundColor: Colors.transparent,
+                    // ),
                   ),
                 ],
               ),
