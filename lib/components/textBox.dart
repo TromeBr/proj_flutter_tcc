@@ -15,6 +15,7 @@ class TextBoxStandard extends StatefulWidget {
   final Function onChange;
   final Function onTap;
   final bool readOnly;
+  final int maxLength;
 
 
 
@@ -30,8 +31,8 @@ class TextBoxStandard extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.onChange,
     this.onTap,
-    this.readOnly = false
-
+    this.readOnly = false,
+    this.maxLength
   });
 
   @override
@@ -49,6 +50,7 @@ class TextBoxStandard extends StatefulWidget {
       onChange: this.onChange,
       onTap: this.onTap,
       readOnly: this.readOnly,
+      maxLength: this.maxLength,
     );
   }
 }
@@ -66,7 +68,8 @@ class TextBoxState extends State<TextBoxStandard> {
   Function onChange;
   final Function onTap;
   final bool readOnly;
-  
+  final int maxLength;
+
   bool _isHidden;
 
   TextBoxState({
@@ -82,6 +85,7 @@ class TextBoxState extends State<TextBoxStandard> {
     this.onChange,
     this.onTap,
     this.readOnly = false,
+    this.maxLength,
   });
   initState(){
       _isHidden = obscureText;
@@ -91,6 +95,7 @@ class TextBoxState extends State<TextBoxStandard> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
       child: TextField(
+        maxLength: maxLength,
         cursorColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
         readOnly: readOnly,
         controller: controller,

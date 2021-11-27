@@ -22,11 +22,11 @@ class TCCApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.white,
-        accentColor: Colors.white,
+        brightness: Brightness.light,
+        primaryColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+        accentColor: Color(Constants.SYSTEM_SECUNDARY_COLOR),
         scrollbarTheme: ScrollbarThemeData().copyWith(
-          thumbColor: MaterialStateProperty.all(Colors.white),
+          thumbColor: MaterialStateProperty.all(Colors.grey[500]),
         ),
       ),
       routes: {
