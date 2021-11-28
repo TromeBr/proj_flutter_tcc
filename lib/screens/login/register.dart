@@ -53,7 +53,7 @@ class UserRegistrationWidgetState extends State<UserRegistrationScreen> {
               TextBoxStandard(
                 nameLabel: Constants.NAME_LABEL_TEXT,
                 controller: _registerFirstName,
-                maxLength: 20,
+                maxLength: 15,
               ),
               TextBoxStandard(
                 nameLabel: Constants.SURNAME_LABEL_TEXT,

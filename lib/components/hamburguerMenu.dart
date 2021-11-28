@@ -57,17 +57,17 @@ class HamburguerMenuState extends State<HamburguerMenu> {
               Column(
                 children: <Widget>[
                   SizedBox(height: 0.0),
-                  GestureDetector(
-                    onTap: () {
-                    },
-                    // child: CircleAvatar(
-                    //   child: Icon(
-                    //     Icons.settings,
-                    //     color: Colors.white,
-                    //   ),
-                    //   backgroundColor: Colors.transparent,
-                    // ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //   },
+                  //   // child: CircleAvatar(
+                  //   //   child: Icon(
+                  //   //     Icons.settings,
+                  //   //     color: Colors.white,
+                  //   //   ),
+                  //   //   backgroundColor: Colors.transparent,
+                  //   // ),
+                  // ),
                 ],
               ),
             ],
@@ -123,7 +123,7 @@ class HamburguerMenuState extends State<HamburguerMenu> {
           MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
 
   }
-  Future<String> getUser(BuildContext context) async {
+  Future<void> getUser(BuildContext context) async {
     var _user = await initializePreference();
     if(_user != null) {
       Map<String,dynamic> decoded = jsonDecode(_user);

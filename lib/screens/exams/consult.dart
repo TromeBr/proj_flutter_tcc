@@ -15,7 +15,6 @@ import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 import 'package:proj_flutter_tcc/services/examService.dart' as examService;
 import 'package:share/share.dart';
 
-import 'consultList.dart';
 
 class ExamConsultScreen extends StatefulWidget {
   ExamConsultForm state;
@@ -266,14 +265,14 @@ class ExamConsultForm extends State<ExamConsultScreen> {
     );
   }
 
-  void _deleteResult(String error, String messageError, {String idExam}) async {
+  void _deleteResult(String messageTitle, String message, {String idExam}) async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(error),
-          content: Text(messageError),
+          title: Text(messageTitle),
+          content: Text(message),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
