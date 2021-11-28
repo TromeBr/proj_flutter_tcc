@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:proj_flutter_tcc/components/SearchBar.dart';
 import 'package:proj_flutter_tcc/components/hamburguerMenu.dart';
 import 'package:proj_flutter_tcc/components/sharedPreferenceInit.dart';
 import 'package:proj_flutter_tcc/components/widget_patterns.dart';
@@ -14,7 +12,6 @@ import 'package:proj_flutter_tcc/models/medExam.dart';
 import 'package:proj_flutter_tcc/models/user_login.dart';
 import 'package:proj_flutter_tcc/screens/exams/consult.dart';
 import 'package:proj_flutter_tcc/services/examListService.dart' as examService;
-import 'package:proj_flutter_tcc/services/fileServices.dart' as fileService;
 
 import 'register.dart';
 
@@ -76,7 +73,7 @@ class MedExamConsultState extends State<MedExamConsultScreen>
             resizeToAvoidBottomInset: false,
             extendBodyBehindAppBar: true,
             appBar: AppBarPattern(
-              titleScreen: '',//'Consulta de Exames',
+              titleScreen: '',
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.add),
@@ -89,9 +86,6 @@ class MedExamConsultState extends State<MedExamConsultScreen>
                         },
                       ),
                     );
-                    future.then((examItem) {
-                      _examsUpdate(examItem);
-                    });
                   },
                 ),
               ],
@@ -221,24 +215,14 @@ class MedExamConsultState extends State<MedExamConsultScreen>
       );
   }
 
-  void _examsUpdate(MedExam examItem) {
-    if (examItem != null) {
-      setState(() {
-        widget._medExamList.add(examItem);
-      });
-    }
-  }
 
   Future<void> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      exams = examService.getExamesByCpf();
-    });
-    return null;
+    exams = examService.getExamesByCpf();
   }
 
-  Future<String> getUsername(BuildContext context) async {
+  Future<void> getUsername(BuildContext context) async {
     var _user = await initializePreference();
     if (_user != null) {
       Map<String, dynamic> decoded = jsonDecode(_user);

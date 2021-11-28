@@ -31,6 +31,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   final TextEditingController _registerData = TextEditingController();
   var maskDate = new MaskTextInputFormatter(mask: '##/##/####');
   bool _isLoading = false;
+  bool _selected;
   bool _searchButtonVerify = false;
 
   //ImagePicker
@@ -50,6 +51,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   void initState() {
     clearCache();
     _isLoading = false;
+    _selected = false;
     DateTime now = DateTime.now();
     context != null
         ? _registerData.text = DateFormat('dd/MM/yyyy').format(now).toString()
@@ -82,105 +84,86 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     //var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBarPattern(titleScreen: 'Cadastro de Exame'),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextBoxStandard(
-              nameLabel: 'Tipo',
-              controller: _registerExam,
-            ),
-            TextBoxStandard(
-              nameLabel: 'CRM',
-              controller: _registerCRM,
-              keyboardType: TextInputType.number,
-              onChange: enableButton,
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 20.0, left: 20.0),
-                width: double.infinity,
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: [
-                    Text(
-                      'UF:',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 10.0)),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: DropdownButton<String>(
-                        style: TextStyle(fontSize: 24, color: Colors.black),
-                        iconSize: 24,
-                        elevation: 16,
-                        hint: Text("UF"),
-                        value: _value,
-                        autofocus: true,
-                        items: Constants.ESTADOS.entries
-                            .map<DropdownMenuItem<String>>((entry) {
-                          return new DropdownMenuItem(
-                            value: entry.key,
-                            child: Text(entry.value),
-                          );
-                        }).toList(),
-                        onChanged: (String val) {
-                          setState(() {
-                            _value = val;
-                          });
-                          enableButton('');
-                        },
-                      ),
-                    ),
-                  ],
-                )),
-            Container(
-              padding: EdgeInsets.only(top: 10.0, left: 20.0),
-              alignment: Alignment.topLeft,
-              child: FloatingActionButton(
-                heroTag: "btnFind",
-                child: Icon(Icons.person_search_sharp),
-                backgroundColor: _searchButtonVerify
-                    ? Color(Constants.SYSTEM_PRIMARY_COLOR)
-                    : Colors.grey,
-                foregroundColor: Colors.white,
-                //mini: true,
-                tooltip: 'Pesquisar ',
-                onPressed: _searchButtonVerify ? () => _docPick() : null,
+    return IgnorePointer(
+      ignoring: _selected,
+      child: Scaffold(
+        appBar: AppBarPattern(titleScreen: 'Cadastro de Exame'),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextBoxStandard(
+                nameLabel: 'Tipo',
+                controller: _registerExam,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-              child: TextField(
-                readOnly: true,
-                controller: _registerDoc,
-                style: TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
-                  ),
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 23),
-                  labelText: 'Médico Solicitante',
+              TextBoxStandard(
+                nameLabel: 'CRM',
+                controller: _registerCRM,
+                keyboardType: TextInputType.number,
+                onChange: enableButton,
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 20.0, left: 20.0),
+                  width: double.infinity,
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        'UF:',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 10.0)),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton<String>(
+                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          iconSize: 24,
+                          elevation: 16,
+                          hint: Text("UF"),
+                          value: _value,
+                          autofocus: true,
+                          items: Constants.ESTADOS.entries
+                              .map<DropdownMenuItem<String>>((entry) {
+                            return new DropdownMenuItem(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            );
+                          }).toList(),
+                          onChanged: (String val) {
+                            setState(() {
+                              _value = val;
+                            });
+                            enableButton('');
+                          },
+                        ),
+                      ),
+                    ],
+                  )),
+              Container(
+                padding: EdgeInsets.only(top: 10.0, left: 20.0),
+                alignment: Alignment.topLeft,
+                child: FloatingActionButton(
+                  heroTag: "btnFind",
+                  child: Icon(Icons.person_search_sharp),
+                  backgroundColor: _searchButtonVerify
+                      ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                      : Colors.grey,
+                  foregroundColor: Colors.white,
+                  //mini: true,
+                  tooltip: 'Pesquisar ',
+                  onPressed: _searchButtonVerify ? () => _docPick() : null,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-              child: TextFormField(
-                readOnly: true,
-                inputFormatters: [maskDate],
-                controller: _registerData,
-                style: TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
+                child: TextField(
+                  readOnly: true,
+                  controller: _registerDoc,
+                  style: TextStyle(fontSize: 24.0),
+                  decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
@@ -190,168 +173,191 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
                           color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
                     ),
                     labelStyle: TextStyle(color: Colors.black, fontSize: 23),
-                    labelText: 'Data',
-                    suffix: InkWell(
-                        onTap: () => _selectDate(context),
-                        child: Icon(
-                          Icons.calendar_today,
-                          color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                        ))),
+                    labelText: 'Médico Solicitante',
+                  ),
+                ),
               ),
-            ),
-            PaddingWidgetPattern(10.0),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 83, 0),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
+                child: TextFormField(
+                  readOnly: true,
+                  inputFormatters: [maskDate],
+                  controller: _registerData,
+                  style: TextStyle(fontSize: 24.0),
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      labelStyle: TextStyle(color: Colors.black, fontSize: 23),
+                      labelText: 'Data',
+                      suffix: InkWell(
+                          onTap: () => _selectDate(context),
+                          child: Icon(
+                            Icons.calendar_today,
+                            color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                          ))),
                 ),
-                Container(
-                  width: 100.0,
-                  height: 50.0,
-                  child: OutlinedButton(
-                    child: Icon(
-                      Icons.attach_file_sharp,
-                      color: Colors.white,
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: imageFile == null && filePath == null
-                          ? Color(Constants.SYSTEM_PRIMARY_COLOR)
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                    ),
-                    onPressed: imageFile == null && filePath == null
-                        ? () async => _openFile()
-                        : null,
+              ),
+              PaddingWidgetPattern(10.0),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 83, 0),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                ),
-                Container(
-                  width: 100.0,
-                  height: 50.0,
-                  child: OutlinedButton(
-                    child: Icon(
-                      Icons.photo_camera_sharp,
-                      color: Colors.white,
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: imageFile == null && filePath == null
-                          ? Color(Constants.SYSTEM_PRIMARY_COLOR)
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                    ),
-                    onPressed: imageFile == null && filePath == null
-                        ? () async => _imagePicker(context)
-                        : null,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-                child: imageFile == null && filePath == null
-                    ? null
-                    : Column(
-                        children: [
-                          PaddingWidgetPattern(10.0),
-                          Container(
-                            width: 300.0,
-                            height: 100.0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                (imageFile != null
-                                    ? FullScreenWidget(
-                                        child: Center(
-                                          child: Hero(
-                                            tag: "smallImage",
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              child: Image.file(
-                                                imageFile,
-                                                alignment: Alignment.center,
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : getTypedImage(filePath, fileExtension)),
-                                Flexible(
-                                  child:
-                                      filePath != null && fileExtension == 'pdf'
-                                          ? Container(
-                                              width: 70,
-                                              child: Text(
-                                                _fileName,
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )
-                                          : Text(''),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                ),
-                                FloatingActionButton(
-                                  heroTag: "btnDel",
-                                  child: Icon(Icons.close_sharp),
-                                  backgroundColor:
-                                      Color(Constants.SYSTEM_PRIMARY_COLOR),
-                                  foregroundColor: Colors.white,
-                                  mini: true,
-                                  tooltip: 'Deletar ' +
-                                      (imageFile == null
-                                          ? 'Arquivo'
-                                          : 'Imagem'),
-                                  onPressed: () {
-                                    setState(() {
-                                      clearCache();
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-            (imageFile == null && filePath == null
-                ? PaddingWidgetPattern(30.0)
-                : PaddingWidgetPattern(15.0)),
-            _isLoading
-                ? Center(
-                    child: SizedBox(
-                    child: CircularProgressIndicator(
-                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                      strokeWidth: 2,
-                    ),
-                    width: 50,
-                    height: 50,
-                  ))
-                : Container(
-                    width: 200.0,
+                  Container(
+                    width: 100.0,
                     height: 50.0,
                     child: OutlinedButton(
-                      child: Text('Cadastrar',
-                          style: TextStyle(color: Colors.white)),
+                      child: Icon(
+                        Icons.attach_file_sharp,
+                        color: Colors.white,
+                      ),
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                        backgroundColor: imageFile == null && filePath == null
+                            ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                            : Colors.grey,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        _CreateExam(context);
-                      },
+                      onPressed: imageFile == null && filePath == null
+                          ? () async => _openFile()
+                          : null,
                     ),
                   ),
-            PaddingWidgetPattern(10.0)
-          ],
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  ),
+                  Container(
+                    width: 100.0,
+                    height: 50.0,
+                    child: OutlinedButton(
+                      child: Icon(
+                        Icons.photo_camera_sharp,
+                        color: Colors.white,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: imageFile == null && filePath == null
+                            ? Color(Constants.SYSTEM_PRIMARY_COLOR)
+                            : Colors.grey,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                      onPressed: imageFile == null && filePath == null
+                          ? () async => _imagePicker(context)
+                          : null,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                  child: imageFile == null && filePath == null
+                      ? null
+                      : Column(
+                          children: [
+                            PaddingWidgetPattern(10.0),
+                            Container(
+                              width: 300.0,
+                              height: 100.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  (imageFile != null
+                                      ? FullScreenWidget(
+                                          child: Center(
+                                            child: Hero(
+                                              tag: "smallImage",
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                child: Image.file(
+                                                  imageFile,
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.scaleDown,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : getTypedImage(filePath, fileExtension)),
+                                  Flexible(
+                                    child:
+                                        filePath != null && fileExtension == 'pdf'
+                                            ? Container(
+                                                width: 70,
+                                                child: Text(
+                                                  _fileName,
+                                                  textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              )
+                                            : Text(''),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  ),
+                                  FloatingActionButton(
+                                    heroTag: "btnDel",
+                                    child: Icon(Icons.close_sharp),
+                                    backgroundColor:
+                                        Color(Constants.SYSTEM_PRIMARY_COLOR),
+                                    foregroundColor: Colors.white,
+                                    mini: true,
+                                    tooltip: 'Deletar ' +
+                                        (imageFile == null
+                                            ? 'Arquivo'
+                                            : 'Imagem'),
+                                    onPressed: () {
+                                      setState(() {
+                                        clearCache();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+              (imageFile == null && filePath == null
+                  ? PaddingWidgetPattern(30.0)
+                  : PaddingWidgetPattern(15.0)),
+              _isLoading
+                  ? Center(
+                      child: SizedBox(
+                      child: CircularProgressIndicator(
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                        strokeWidth: 2,
+                      ),
+                      width: 50,
+                      height: 50,
+                    ))
+                  : Container(
+                      width: 200.0,
+                      height: 50.0,
+                      child: OutlinedButton(
+                        child: Text('Cadastrar',
+                            style: TextStyle(color: Colors.white)),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Color(Constants.SYSTEM_PRIMARY_COLOR),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isLoading = true;
+                            _selected = true;
+                          });
+                          _CreateExam(context);
+                        },
+                      ),
+                    ),
+              PaddingWidgetPattern(10.0)
+            ],
+          ),
         ),
       ),
     );
@@ -517,12 +523,11 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
       );
       var ExamInsert = await examService.insertExam(createdExam);
       if (ExamInsert != null) {
-        createdExam.id = ExamInsert;
-        createdExam.fileId = ExamInsert;
-        Navigator.pop(context, createdExam);
+        Navigator.of(context).restorablePopAndPushNamed('/consultList');
       } else {
         setState(() {
           _isLoading = false;
+          _selected = false;
         });
         showDialog<void>(
           context: context,
@@ -546,6 +551,7 @@ class ExamRegisterForm extends State<ExamRegisterScreen> {
     } else {
       setState(() {
         _isLoading = false;
+        _selected = false;
       });
       showDialog<void>(
         context: context,

@@ -34,6 +34,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
   bool _updateVerify = false;
   UserContext _userContext;
   bool validateCPF = false;
+  bool _selected = false;
   bool passwordValidator = false;
 
   UserContext get userContext => _userContext;
@@ -45,6 +46,7 @@ class MyDataWidgetState extends State<MyDataScreen> {
   @override
   void initState() {
     super.initState();
+    _selected = false;
     getUser(context);
   }
 
@@ -60,155 +62,158 @@ class MyDataWidgetState extends State<MyDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarPattern(
-        titleScreen: Constants.DATA_USER_TITLE_SCREEN,
-        actions: _updateVerify
-            ? <Widget>[
-                IconButton(
-                    icon: Icon(
-                      Icons.update_outlined,
-                      color: Color(Constants.SYSTEM_PRIMARY_COLOR),
-                    ),
-                    onPressed: () async {
-                      var errors = _userConsist();
-                      if (errors.isEmpty) {
-                        if (_userPassword.text.isEmpty)
-                          updateUser();
-                        else
-                          _showPasswordConfirmationDialog();
-                      } else
-                        errorReturn(context, errorsList: errors);
-                    }),
-              ]
-            : null,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            //PaddingWidgetPattern(4.0),
-            TextBoxStandard(
-              nameLabel: Constants.CPF_LABEL_TEXT,
-              controller: _userCPF,
-              keyboardType: TextInputType.number,
-              readOnly: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-              child: TextFormField(
-                onChanged: hasChanged,
-                readOnly: true,
-                inputFormatters: [maskDate],
-                controller: _userBirthDate,
-                style: TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
-                    ),
-                    labelStyle: TextStyle(color: Colors.black, fontSize: 23),
-                  labelText: 'Data de Nascimento',
-                ),
-              ),
-            ),
-            TextBoxStandard(
-              nameLabel: Constants.NAME_LABEL_TEXT,
-              controller: _userFirstName,
-              onChange: hasChanged,
-              maxLength: 20,
-            ),
-            TextBoxStandard(
-              nameLabel: Constants.SURNAME_LABEL_TEXT,
-              controller: _userSurname,
-              onChange: hasChanged,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-            ),
-
-            TextBoxStandard(
-              nameLabel: Constants.EMAIL_LABEL_TEXT,
-              controller: _userEmail,
-              keyboardType: TextInputType.emailAddress,
-              onChange: hasChanged,
-              maxLength: 50,
-            ),
-
-            TextBoxStandard(
-              nameLabel: Constants.PASSWORD_LABEL_TEXT,
-              controller: _userPassword,
-              obscureText: true,
-              onChange: hasChanged,
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 30.0, left: 20.0),
-                width: double.infinity,
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: [
-                    Text(
-                      'Sexo:',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 10.0)),
-                    Container(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: DropdownButton<String>(
-                        style: TextStyle(fontSize: 24, color: Colors.black),
-                        iconSize: 24,
-                        elevation: 16,
-                        hint: Text("Sexo"),
-                        value: _value,
-                        autofocus: true,
-                        onChanged: (String val) {
-                          setState(() {
-                            _value = val;
-                          });
-                          hasChanged('');
-                        },
-                        items: <DropdownMenuItem<String>>[
-                          new DropdownMenuItem(
-                            child: new Text('Masculino'),
-                            value: 'M',
-                          ),
-                          new DropdownMenuItem(
-                            child: new Text('Feminino'),
-                            value: 'F',
-                          ),
-                          new DropdownMenuItem(
-                            child: new Text('Outro'),
-                            value: 'U',
-                          ),
-                        ],
+    return IgnorePointer(
+      ignoring: _selected,
+      child: Scaffold(
+        appBar: AppBarPattern(
+          titleScreen: Constants.DATA_USER_TITLE_SCREEN,
+          actions: _updateVerify
+              ? <Widget>[
+                  IconButton(
+                      icon: Icon(
+                        Icons.update_outlined,
+                        color: Color(Constants.SYSTEM_PRIMARY_COLOR),
                       ),
-                    ),
-                  ],
-                )),
-            PaddingWidgetPattern(15.0),
-            Container(
-              height: 50.0,
-              width: 300.0,
-              child: OutlinedButton(
-                child: Text(
-                  Constants.USER_REMOVE,
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  _showUserConfirmationDialog();
-                },
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                      onPressed: () async {
+                        var errors = _userConsist();
+                        if (errors.isEmpty) {
+                          if (_userPassword.text.isEmpty)
+                            updateUser();
+                          else
+                            _showPasswordConfirmationDialog();
+                        } else
+                          errorReturn(context, errorsList: errors);
+                      }),
+                ]
+              : null,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              //PaddingWidgetPattern(4.0),
+              TextBoxStandard(
+                nameLabel: Constants.CPF_LABEL_TEXT,
+                controller: _userCPF,
+                keyboardType: TextInputType.number,
+                readOnly: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
+                child: TextFormField(
+                  onChanged: hasChanged,
+                  readOnly: true,
+                  inputFormatters: [maskDate],
+                  controller: _userBirthDate,
+                  style: TextStyle(fontSize: 24.0),
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(Constants.SYSTEM_PRIMARY_COLOR)),
+                      ),
+                      labelStyle: TextStyle(color: Colors.black, fontSize: 23),
+                    labelText: 'Data de Nascimento',
+                  ),
                 ),
               ),
-            ),
-            PaddingWidgetPattern(20.0),
-          ],
+              TextBoxStandard(
+                nameLabel: Constants.NAME_LABEL_TEXT,
+                controller: _userFirstName,
+                onChange: hasChanged,
+                maxLength: 15,
+              ),
+              TextBoxStandard(
+                nameLabel: Constants.SURNAME_LABEL_TEXT,
+                controller: _userSurname,
+                onChange: hasChanged,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+              ),
+
+              TextBoxStandard(
+                nameLabel: Constants.EMAIL_LABEL_TEXT,
+                controller: _userEmail,
+                keyboardType: TextInputType.emailAddress,
+                onChange: hasChanged,
+                maxLength: 50,
+              ),
+
+              TextBoxStandard(
+                nameLabel: Constants.PASSWORD_LABEL_TEXT,
+                controller: _userPassword,
+                obscureText: true,
+                onChange: hasChanged,
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 30.0, left: 20.0),
+                  width: double.infinity,
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Sexo:',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 10.0)),
+                      Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton<String>(
+                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          iconSize: 24,
+                          elevation: 16,
+                          hint: Text("Sexo"),
+                          value: _value,
+                          autofocus: true,
+                          onChanged: (String val) {
+                            setState(() {
+                              _value = val;
+                            });
+                            hasChanged('');
+                          },
+                          items: <DropdownMenuItem<String>>[
+                            new DropdownMenuItem(
+                              child: new Text('Masculino'),
+                              value: 'M',
+                            ),
+                            new DropdownMenuItem(
+                              child: new Text('Feminino'),
+                              value: 'F',
+                            ),
+                            new DropdownMenuItem(
+                              child: new Text('Outro'),
+                              value: 'U',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+              PaddingWidgetPattern(15.0),
+              Container(
+                height: 50.0,
+                width: 300.0,
+                child: OutlinedButton(
+                  child: Text(
+                    Constants.USER_REMOVE,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    _showUserConfirmationDialog();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                ),
+              ),
+              PaddingWidgetPattern(20.0),
+            ],
+          ),
         ),
       ),
     );
@@ -304,6 +309,9 @@ class MyDataWidgetState extends State<MyDataScreen> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
+                setState(() {
+                  _selected = false;
+                });
                 Navigator.of(context).pop();
                 Navigator.of(context).restorablePopAndPushNamed('/myData');
               },
@@ -456,6 +464,9 @@ class MyDataWidgetState extends State<MyDataScreen> {
   Future<void> updateUser() async {
     var _userUpdate =
         await dataService.userUpdate(this._userContext);
+    setState(() {
+      _selected = true;
+    });
     if (_userUpdate)
       _updateResult("Alteração concluída",
           "O usuário foi alterado com sucesso");
